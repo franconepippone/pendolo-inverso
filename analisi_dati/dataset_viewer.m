@@ -1,6 +1,6 @@
 %% Data viewer and editor
 
-data = readtable("buone_nuovo_modello/longer.csv");
+data = readtable("14-4/libero_pid_long.csv");
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 
@@ -32,7 +32,7 @@ figure(1)
 plot(ITER_WINDOW, STATES_NEW(ITER_WINDOW, :));
 legend({'theta', "theta'", 'position', 'velocity'});
 
-xlabel('time (s)');
+xlabel('sample');
 %ylim([-23, 23]);
 %xlim(TIMEWINDOW_VIEW);
 title('Dati raccolti');

@@ -1,5 +1,6 @@
 import serial
 import time
+import math
 import struct
 from datetime import datetime
 import random
@@ -35,7 +36,7 @@ def save_state_line(linebin: bytes, f):
         pos = struct.unpack('<d', linebin[24:32])[0]
         vel = struct.unpack('<d', linebin[32:40])[0]
         line: str = ", ".join([str(item) for item in (timestamp, u, theta, theta_dot, pos, vel)])
-        print(timestamp, u, theta, theta_dot, pos, vel)
+        #print(timestamp, u, theta, theta_dot, pos, vel)
         f.write(line + "\n")
     except struct.error as e:
         pass
@@ -74,12 +75,18 @@ with open(FILENAME, "a") as f:
     print("Entrando nel loop...")
     time.sleep(2)
     ser.reset_input_buffer()
+    i = 0
     while True:
         pygame.event.get()
         
         #wanted_target += joypad.get_axis(0) * 5
         #target += (wanted_target - target) * .01
-        #ser.write(f"set-target {target}\n".encode())
+        i += 1
+        if i > 10:
+            i = 0
+            target = math.sin(time.time() * .3) * 10
+            ser.write(f"set-target {target}\n".encode())
+            print("new target: ", target)
         
         save_line_bin(f)
         #time.sleep(0.009)

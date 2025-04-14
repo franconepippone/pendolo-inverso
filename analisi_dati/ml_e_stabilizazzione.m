@@ -4,7 +4,7 @@ clc
 format long
 
 %% Caricamento del dataset
-data = readtable("buone_nuovo_modello/longer.csv");
+data = readtable("14-4/libero_pid.csv");
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 
@@ -15,16 +15,17 @@ STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 
 TIMESTEP = 10^-2 % 10ms
 
-old_timestamps_s = data.timestamp / 1000; % lo trasforma in secondi
+old_timestamps_s = data.timestamp / 1000; % converte i timestamps da ms a s
 
-% nuovi timestamps
-new_timestamps = min(old_timestamps_s):TIMESTEP:max(old_timestamps_s);  % Interpolating at every 0.1 interval
+% crea la nuova sequenza di timestamps
+new_timestamps = min(old_timestamps_s):TIMESTEP:max(old_timestamps_s); 
 
 [inutile, N] = size(new_timestamps);
 STATES_NEW = zeros(N, 4);
 INPUTS_NEW = zeros(N, 1);
 
-% Interpolate using PCHIP
+% popola le matrici di stato nuovo interpolando e ricampionando alla
+% frequenza specificata
 STATES_NEW(:, 1) = interp1(old_timestamps_s, data.theta, new_timestamps, 'pchip')';
 STATES_NEW(:, 2) = interp1(old_timestamps_s, data.theta_dot, new_timestamps, 'pchip');
 STATES_NEW(:, 3) = interp1(old_timestamps_s, data.pos, new_timestamps, 'pchip');
@@ -32,24 +33,28 @@ STATES_NEW(:, 4) = interp1(old_timestamps_s, data.vel, new_timestamps, 'pchip');
 INPUTS_NEW(:, 1) = interp1(old_timestamps_s, data.input, new_timestamps, 'pchip');
 
 Y = STATES_NEW(2:end, :); % elimina la prima riga (porta Y avanti nel tempo di un iterazione)
-X = [STATES_NEW INPUTS_NEW];
-X = X(1:end-1, :); % elimina l'ultima riga per fargli avere le stesse righe di Y
+X = [STATES_NEW INPUTS_NEW];    % concatena gli inputs allo stato per creare l'intera matrice X
+X = X(1:end-1, :); % elimina l'ultima riga di X per fargli avere le stesse righe di Y
 
+% X e Y sono pronte ad essere usate per il training
+disp("Number of training samples in X and Y:")
+disp(N)
 
 %% Stima delle matrici A e B del sistema con regressione lineare
 
-% Porzione del dataset che viene usata per il training (utile se si vuole
+% TRAIN_WINDOW stabilisce la porzione del dataset che viene usata per il training (utile se si vuole
 % isolare una specifica finestra temporale, o per tagliare fuori porzioni
 % di dati rumorose o troppo instabili)
 
 train_percentuale = .7; % percentuale del dataset che viene usata come training
-TRAIN_WINDOW = 1:round((N-1) * train_percentuale);
+TRAIN_WINDOW = 1:round((N-1) * train_percentuale); % indici per estrarre la percentuale specificata
+%TRAIN_WINDOW = 8800:(N-1)
 
 Y_train = Y(TRAIN_WINDOW, :);
 X_train = X(TRAIN_WINDOW, :);
 
 % Linear regression 
-M_hat = X_train\Y_train; %efficient implementation
+M_hat = X_train\Y_train;
 
 % estraggo le matrici A e B dal risultato
 A = M_hat(1:4, :)';
@@ -78,7 +83,7 @@ disp(rmse_value)
 %% Grafico dei dati di partenza processati
 
 % finestra delle iterazioni visualizzate sul grafico
-ITER_WINDOW = 11400:11600;
+ITER_WINDOW = 10000:15000;
 
 % calcola, da ITER_WINDOW, la finestra temporale da visualizzare.
 TIMEWINDOW_VIEW = [new_timestamps(ITER_WINDOW(1)), new_timestamps(ITER_WINDOW(end))];
@@ -100,10 +105,11 @@ grid on;
 
 sys = ss(A, B, eye(4), 0, TIMESTEP);
 
-% Intervallo su cui viene svolta la simulazione
+% Intervallo su cui viene svolta la simulazione (lo riprende dalla section
+% precedente)
 ITER_START = ITER_WINDOW(1);
 ITER_MAX = ITER_WINDOW(end);
-U = INPUTS_NEW(ITER_START:ITER_MAX);
+U = INPUTS_NEW(ITER_START:ITER_MAX) * 0;
 t = new_timestamps(ITER_START:ITER_MAX)';
 
 x0 = STATES_NEW(ITER_START, :); % estrae lo stato a quell'iterazione
