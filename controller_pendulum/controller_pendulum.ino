@@ -235,6 +235,14 @@ void processSerialCommands() {
       Serial.print("Offset set to:\t");
       Serial.println(angle_offset);
 
+    } else if (cmd == "get-integrals") {
+      float int1 = pid_inner.getIntegral();
+      float int2 = pid_outer.getIntegral();
+      Serial.print("Integral components of pid 1/2 are: ");
+      Serial.print(int1, 10);
+      Serial.print('\t');
+      Serial.println(int1, 10);
+    
     } else if (cmd == "help") {
       const char* helpmsg = 
       "\nHere's a list of commands:\n"
@@ -297,7 +305,7 @@ void setup() {
   Serial.begin(115200);
   while(!Serial);
   delay(1000);
-  Serial.println("Serial initialized.");
+  Serial.println("\n\nSerial initialized.");
 
   // ================================ ESP-NOW INITIALIZATION
   // Set device as a Wi-Fi Station

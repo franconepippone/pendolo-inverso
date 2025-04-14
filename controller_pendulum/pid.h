@@ -40,4 +40,7 @@ public:
       Serial.print('\t');
       Serial.println(d);
     }
+
+    // returns integral contribution to output
+    float getIntegral() {return err_int;}
 };
