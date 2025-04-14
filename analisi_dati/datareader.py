@@ -57,6 +57,8 @@ time.sleep(1)
 ser.write("debug OFF\n".encode())
 time.sleep(.5)
 ser.write("gather-data ONBIN\n".encode())
+time.sleep(.5)
+ser.write("set-mode SF\n".encode())
 
 
 x = 0

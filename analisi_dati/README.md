@@ -1,2 +1,2 @@
-# pendolo-inverso
- Progetto per tesi di laurea sulla stabilizzazione di un pendolo inverso
+# analisi-dati
+ Qui dentro ci sono tutti gli script di l'acquisizione dati (python) e di analisi (matlab)
