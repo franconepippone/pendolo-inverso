@@ -4,7 +4,7 @@
 #include <AS5600.h>
 #include "clock.h"
 
-#define UPDATE_FREQUENCY 210
+#define UPDATE_FREQUENCY 110
 #define LOOP_PERIOD 1.0 / UPDATE_FREQUENCY / MUs_TO_S
 #define SENSOR_DIR_PIN 14
 
@@ -34,8 +34,8 @@ uint8_t receiverAddress[] = {0xC8, 0x2B, 0x96, 0x23, 0x14, 0x2B};
 
 // Must match the receiver structure
 typedef struct sensorPacket {
-  double theta;
-  double theta_dot;
+  float theta;
+  float theta_dot;
 } sensorPacket;
 
 sensorPacket angle_state;

@@ -42,8 +42,8 @@ numericalIntegrator sf_integral(.3);
 
 // Must match the sender structure
 typedef struct sensorPacket {
-  double theta;
-  double theta_dot;
+  float theta;
+  float theta_dot;
 } sensorPacket;
 
 sensorPacket angle_packet;
@@ -341,8 +341,10 @@ void loop()
     const float dt = clock_inner.getdt();
 
     // lettura dello stato
+    noInterrupts(); // non vogliamo che avvenga un interrupt mentre vengono letti i dati
     state.theta = angle_packet.theta + angle_offset; // gets latest packets
     state.theta_dot = angle_packet.theta_dot;
+    interrupts();
     state.vel = cart.getVelocity();
     state.pos = cart.getPosition();
 
