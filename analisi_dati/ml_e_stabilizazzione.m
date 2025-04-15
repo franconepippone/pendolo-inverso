@@ -4,9 +4,10 @@ clc
 format long
 
 %% Caricamento del dataset
-data = readtable("14-4/libero_pid.csv");
+data = readtable("15-4/moving_target_PID.csv");
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
+STATES = STATES(1:end-100, :);
 
 
 %% Costruzione delle matrici di training con interpolazione
@@ -46,7 +47,7 @@ disp(N)
 % isolare una specifica finestra temporale, o per tagliare fuori porzioni
 % di dati rumorose o troppo instabili)
 
-train_percentuale = .7; % percentuale del dataset che viene usata come training
+train_percentuale = .8; % percentuale del dataset che viene usata come training
 TRAIN_WINDOW = 1:round((N-1) * train_percentuale); % indici per estrarre la percentuale specificata
 %TRAIN_WINDOW = 8800:(N-1)
 
@@ -83,7 +84,7 @@ disp(rmse_value)
 %% Grafico dei dati di partenza processati
 
 % finestra delle iterazioni visualizzate sul grafico
-ITER_WINDOW = 10000:15000;
+ITER_WINDOW = 900:9000;
 
 % calcola, da ITER_WINDOW, la finestra temporale da visualizzare.
 TIMEWINDOW_VIEW = [new_timestamps(ITER_WINDOW(1)), new_timestamps(ITER_WINDOW(end))];
@@ -109,7 +110,7 @@ sys = ss(A, B, eye(4), 0, TIMESTEP);
 % precedente)
 ITER_START = ITER_WINDOW(1);
 ITER_MAX = ITER_WINDOW(end);
-U = INPUTS_NEW(ITER_START:ITER_MAX) * 0;
+U = INPUTS_NEW(ITER_START:ITER_MAX);
 t = new_timestamps(ITER_START:ITER_MAX)';
 
 x0 = STATES_NEW(ITER_START, :); % estrae lo stato a quell'iterazione

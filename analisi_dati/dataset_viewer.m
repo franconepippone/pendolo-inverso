@@ -1,6 +1,6 @@
 %% Data viewer and editor
 
-data = readtable("14-4/libero_pid_long.csv");
+data = readtable("15-4/moving_target_PID.csv");
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 
