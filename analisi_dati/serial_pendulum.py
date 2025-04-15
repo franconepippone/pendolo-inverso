@@ -8,13 +8,13 @@ class InvertedPendulum:
     """
 
     ser: serial.Serial
-    _gather_mode: Literal["BIN", "TEXT"]
+    _gather_mode: Literal["BIN", "TEXT", "OFF"]
 
     def __init__(self, comport: str):
         self.ser = serial.Serial(baudrate=115200)
         self.ser.port = comport
         self.ser.timeout = .5
-        self._gather_mode = "BIN"
+        self._gather_mode = "OFF"
     
     def connect(self) -> bool:
         """
@@ -28,7 +28,7 @@ class InvertedPendulum:
             print(f"Impossibile aprire seriale su porta: {self.ser.port}")
             return False
     
-    def gather_data(self, mode: Literal["BIN", "TEXT"] = "BIN") -> None:
+    def gather_data(self, mode: Literal["BIN", "TEXT", "OFF"] = "BIN") -> None:
         """
         Abilità l'invio dello stato nella modalità predefinità
         """
@@ -40,6 +40,8 @@ class InvertedPendulum:
                 self.send_command("gather-data ONBIN")
             case "TEXT":
                 self.send_command("gather-data ON")
+            case "OFF":
+                self.send_command("gather-data OFF")
             case _:
                 raise ValueError(f"Invalid data gathering option: {mode}")
 
@@ -50,13 +52,17 @@ class InvertedPendulum:
         primo di una coda. Chiama il più rapidamente possibile.
         """
         try:
-            if self._gather_mode == "BIN":
-                linebin: bytes =  self.ser.read_until(expected='-S\r\n'.encode('UTF-8'))
-                return self._decode_packet_bin(linebin)
+            match self._gather_mode:
+                case "BIN":
+                    linebin: bytes =  self.ser.read_until(expected='-S\r\n'.encode('UTF-8'))
+                    return self._decode_packet_bin(linebin)
             
-            elif self._gather_mode == "TEXT":
-                line = self.ser.readline()
-                return (float(val) for val in line.decode().split(","))
+                case "TEXT":
+                    line = self.ser.readline()
+                    return self._decode_packet_text(line.decode())
+                
+                case "OFF":
+                    return ValueError("Cannot read state because state gathering is not enabled")
             
         except serial.SerialException:
             print("No state packet were available")
@@ -91,6 +97,14 @@ class InvertedPendulum:
         except serial.SerialException as e:
             return False
 
+    @staticmethod
+    def _decode_packet_text(line: str) -> Tuple[float] | None:
+        try:
+            values = line.split(",")
+            return tuple([int(values[0])] + [float(val) for val in values[1:]])
+        except BaseException:
+            return None
+    
     @staticmethod
     def _decode_packet_bin(linebin: bytes) -> Tuple[float] | None:
         if linebin[0:2] != "S-".encode():
