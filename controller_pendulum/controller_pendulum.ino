@@ -14,9 +14,9 @@
 #define STEP_PIN        4
 #define DIR_PIN         5
 #define EN_PIN         14
-#define MS1             12
+#define MS1             15
 #define MS2             13
-#define MS3             15 // be mindful of this pin
+#define MS3             12 // be mindful of this pin
 
 #define INPUT_RANGE 1500
 
@@ -258,8 +258,8 @@ void processSerialCommands() {
       "\t- get-pid1/get-pid2: prints pid1 or pid2 gains.\n"
       "\t- set-K <k1> <k2> <k3> <k4>: sets state-feedback gain matrix K.\n"
       "\t- get-K: prints state-feedback gain matrix K values.\n"
-      "\t- offset <float amount>: adds specified amount of radians to the angle reading (additive over multiple calls)."
-      "\t- debug <ON/OFF>: prints debug/info/response messages to serial.";
+      "\t- offset <float amount>: adds specified amount of radians to the angle reading (additive over multiple calls).\n"
+      "\t- debug <ON/OFF>: prints debug/info/response messages to serial. Useful to avoid serial pollution while gathering data.";
       Serial.println(helpmsg);
     } else {
       Serial.print("Unknown command: ");

@@ -15,7 +15,7 @@ class InvertedPendulum:
         self.ser.port = comport
         self.ser.timeout = .5
         self._gather_mode = "OFF"
-    
+
     def connect(self) -> bool:
         """
         Prova a stabilire la connessione su sreiale con il pendolo.
@@ -27,7 +27,7 @@ class InvertedPendulum:
         except serial.SerialException as e:
             print(f"Impossibile aprire seriale su porta: {self.ser.port}")
             return False
-    
+
     def gather_data(self, mode: Literal["BIN", "TEXT", "OFF"] = "BIN") -> None:
         """
         Abilità l'invio dello stato nella modalità predefinità
@@ -48,7 +48,7 @@ class InvertedPendulum:
     def read_state(self) -> Tuple[float] | None:
         """
         Preleva e decodifica un eventuale pacchetto di stato ricevuto tramite seriale nel buffer.
-        Nessuna garanzia che il pacchetto sia effettivamente l'ultimo ricevuto, potrebbe essere il 
+        Nessuna garanzia che il pacchetto sia effettivamente l'ultimo ricevuto, potrebbe essere il
         primo di una coda. Chiama il più rapidamente possibile.
         """
         try:
@@ -56,14 +56,14 @@ class InvertedPendulum:
                 case "BIN":
                     linebin: bytes =  self.ser.read_until(expected='-S\r\n'.encode('UTF-8'))
                     return self._decode_packet_bin(linebin)
-            
+
                 case "TEXT":
                     line = self.ser.readline()
                     return self._decode_packet_text(line.decode())
-                
+
                 case "OFF":
                     return ValueError("Cannot read state because state gathering is not enabled")
-            
+
         except serial.SerialException:
             print("No state packet were available")
             return None
@@ -79,7 +79,7 @@ class InvertedPendulum:
                 self.send_command("set-mode SF")
             case _:
                 raise ValueError(f"Invalid controller mode: {mode}")
-    
+
     def set_target(self, target: float) -> None:
         """
         Imposta il target per i controllori che lo supportano.
@@ -104,13 +104,13 @@ class InvertedPendulum:
             return tuple([int(values[0])] + [float(val) for val in values[1:]])
         except BaseException:
             return None
-    
+
     @staticmethod
     def _decode_packet_bin(linebin: bytes) -> Tuple[float] | None:
         if linebin[0:2] != "S-".encode():
             print(f"Invalid starting symbol found: {linebin[0:2]}")
             return
-        
+
         linebin = linebin[2:]
         try:
             timestamp = int.from_bytes(linebin[0:4], "little", signed=False)
@@ -120,12 +120,12 @@ class InvertedPendulum:
             pos = struct.unpack('<d', linebin[24:32])[0]
             vel = struct.unpack('<d', linebin[32:40])[0]
             return (timestamp, u, theta, theta_dot, pos, vel)
-        
+
         except struct.error as e:
             return None
 
     def clear_serial(self) -> None:
-        """Svuota il buffer di ricezione seriale. 
+        """Svuota il buffer di ricezione seriale.
         """
         self.ser.reset_input_buffer()
 
