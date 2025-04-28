@@ -341,10 +341,8 @@ void loop()
     const float dt = clock_inner.getdt();
 
     // lettura dello stato
-    noInterrupts(); // non vogliamo che avvenga un interrupt mentre vengono letti i dati
     state.theta = angle_packet.theta + angle_offset; // gets latest packets
     state.theta_dot = angle_packet.theta_dot;
-    interrupts();
     state.vel = cart.getVelocity();
     state.pos = cart.getPosition();
 
@@ -399,6 +397,7 @@ void loop()
         switch (currentMode) {
         case ControllerType::PID:
           u = loopPID(dt);
+          if (abs(u) > 1400) Serial.println(u);
           break;
         case ControllerType::FULL_SF:
           u = loopSF(dt);
@@ -419,5 +418,6 @@ void loop()
   if (currentMode == ControllerType::SPEED) cart.driveSpeed(direct_speed_drive);
   else cart.driveAccel(dt_real, u);
 
+  //esp_now_register_recv_cb(OnDataRecv);
   //Serial.println(dt_real, 10); // about 11-12 ms
 }
