@@ -123,14 +123,9 @@ void loop()
     // Send message via ESP-NOW, if the time has come
     if (loopclock.tickUs(LOOP_PERIOD)) {
       esp_now_send(receiverAddress, (uint8_t *) &angle_state, sizeof(angle_state));
-      Serial.print(angle_state.theta, 10);
-      Serial.print("\t");
-      Serial.print(angle_state.theta_dot, 10);
-      Serial.print("\t");
-      Serial.println(angle_pot_offset, 10);
     }
     
-    // every 200ms update offset from pot
+    // every 200ms update offset from potentiometer
     if (loop_secondary.tickMs(200)) {
       const float pot = multisampleAnalog(A0, 150);
       angle_pot_offset = lerp(angle_pot_offset, (pot - 511) * POT_OFFSET_SCALE, .5);
@@ -138,21 +133,6 @@ void loop()
 
     delay(2); // 0.002 seconds
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

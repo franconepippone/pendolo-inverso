@@ -393,11 +393,11 @@ void loop()
           break;
         }
 
+...
         // depending on 
         switch (currentMode) {
         case ControllerType::PID:
           u = loopPID(dt);
-          if (abs(u) > 1400) Serial.println(u);
           break;
         case ControllerType::FULL_SF:
           u = loopSF(dt);
@@ -407,7 +407,9 @@ void loop()
           break;
         }
         break;
-        
+...
+
+
     }
   }
 
@@ -418,6 +420,4 @@ void loop()
   if (currentMode == ControllerType::SPEED) cart.driveSpeed(direct_speed_drive);
   else cart.driveAccel(dt_real, u);
 
-  //esp_now_register_recv_cb(OnDataRecv);
-  //Serial.println(dt_real, 10); // about 11-12 ms
 }
