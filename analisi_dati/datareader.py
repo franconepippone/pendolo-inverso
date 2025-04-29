@@ -24,6 +24,15 @@ print("Pendolo connesso: ", esito)
 time.sleep(3)
 print("Abilitando la trasmissione dello stato su seriale...")
 pendolo.gather_data("BIN")
+pendolo.send_command("get-pid1")
+pendolo.send_command("get-pid2")
+time.sleep(.5)
+print(pendolo.ser.readline())
+print(pendolo.ser.readline())
+print(pendolo.ser.readline())
+print(pendolo.ser.readline())
+time.sleep(.5)
+print(pendolo.ser.readline())
 
 x = 0
 next_x = random.randrange(500, 1000)
@@ -46,7 +55,7 @@ with open(FILENAME, "a") as f:
         #wanted_target += joypad.get_axis(0) * 5
         #target += (wanted_target - target) * .01
         i += 1
-        if i > 10:
+        if i > 200000:
             i = 0
             target = math.sin(time.time() * .3) * 25
             pendolo.set_target(target)
