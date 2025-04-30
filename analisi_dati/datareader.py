@@ -19,7 +19,8 @@ print("Using file:", FILENAME)
 pendolo = InvertedPendulum("COM8")
 esito = pendolo.connect()
 print("Pendolo connesso: ", esito)
-
+if not esito:
+    quit()
 
 time.sleep(3)
 print("Abilitando la trasmissione dello stato su seriale...")
