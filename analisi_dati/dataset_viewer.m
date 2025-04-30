@@ -1,7 +1,7 @@
 %% Data viewer and editor
 
 data = readtable("buone/libero.csv");
-
+input = data.input
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 
 TIMESTEP = 10^-2 % 10ms
@@ -30,6 +30,7 @@ ITER_WINDOW = 1:N;
 % Plot dello stato dal dataset e interpolato
 figure(1)
 plot(ITER_WINDOW, STATES_NEW(ITER_WINDOW, :));
+
 legend({'theta', "theta'", 'position', 'velocity'});
 
 xlabel('sample');
