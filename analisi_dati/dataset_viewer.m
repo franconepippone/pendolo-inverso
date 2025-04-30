@@ -1,7 +1,7 @@
 %% Data viewer and editor
 
-data = readtable("buone/libero.csv");
-input = data.input
+data = readtable("per_tesina/PID_VELOCI.csv");
+
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 
 TIMESTEP = 10^-2 % 10ms
@@ -26,17 +26,37 @@ TIMEWINDOW_VIEW = [90 95]
 
 % finestra delle iterazioni visualizzate sul grafico
 ITER_WINDOW = 1:N;
+%ITER_WINDOW = 1070:1800;
 
 % Plot dello stato dal dataset e interpolato
 figure(1)
-plot(ITER_WINDOW, STATES_NEW(ITER_WINDOW, :));
+plot(ITER_WINDOW, [INPUTS_NEW(ITER_WINDOW) STATES_NEW(ITER_WINDOW, :)]);
+legend({'input', 'theta', "theta'", 'position', 'velocity'});
 
-legend({'theta', "theta'", 'position', 'velocity'});
+TIME_START = 45
+TIME_END = 49
 
-xlabel('sample');
+figure(2)
+title('Dati raccolti');
+subplot(2,1,1);  % 2 righe, 1 colonna, primo plot
+plot(new_timestamps(ITER_WINDOW) - TIME_START, rad2deg(STATES_NEW(ITER_WINDOW, 1)), 'LineWidth',1.5);
+yline(0, '--');
+xlabel('time (s)');
+ylabel('theta (deg)');
+xlim([0, TIME_END-TIME_START])
+ylim([-22, 18])
+
+subplot(2,1,2);  % 2 righe, 1 colonna, primo plot
+yline(0);
+plot(new_timestamps(ITER_WINDOW) - TIME_START, STATES_NEW(ITER_WINDOW, 4), 'LineWidth',1.5);
+yline(0, '--');
+ylabel('cart position');
+xlabel('time (s)');
+xlim([0, TIME_END-TIME_START])
+ylim([-160, 150])
+
 %ylim([-23, 23]);
 %xlim(TIMEWINDOW_VIEW);
-title('Dati raccolti');
 grid on;
 
 % 262 - 6290
