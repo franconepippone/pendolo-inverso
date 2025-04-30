@@ -88,8 +88,8 @@ double loopPID(double dt) {
   double r = pid_outer.control(dt, cart_target - state.pos);
   double acc = pid_inner.control(dt, state.theta);
 
-  double u = r - acc;
-  return -u; // restituisce l'ingresso
+  double u = acc - r;
+  return u; // restituisce l'ingresso
 }
 
 
@@ -393,11 +393,11 @@ void loop()
           break;
         }
 
+...
         // depending on 
         switch (currentMode) {
         case ControllerType::PID:
           u = loopPID(dt);
-          if (abs(u) > 1400) Serial.println(u);
           break;
         case ControllerType::FULL_SF:
           u = loopSF(dt);
@@ -407,7 +407,9 @@ void loop()
           break;
         }
         break;
-        
+...
+
+
     }
   }
 
@@ -416,8 +418,6 @@ void loop()
   u = constrain(u, -INPUT_RANGE, INPUT_RANGE);
 
   if (currentMode == ControllerType::SPEED) cart.driveSpeed(direct_speed_drive);
-  else cart.driveAccel(dt_real, u);
+  else cart.driveAccel(dt_real, u); // la direzione di positiva del carrello è antioraria
 
-  //esp_now_register_recv_cb(OnDataRecv);
-  //Serial.println(dt_real, 10); // about 11-12 ms
 }

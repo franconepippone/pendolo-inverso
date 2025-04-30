@@ -139,6 +139,10 @@ if __name__ == "__main__":
 
             case "help":
                 print(help_msg)
+            
+            case "all":
+                recenter_time(target=target_file)
+                remove_duplicate_timestamps(target=target_file)
 
             case _:
                 print(f"Unknown command: {command}")

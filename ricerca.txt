@@ -1,0 +1,3 @@
+prova regressione con gain del pid piu lenti
+prova a post processare i dati con il tool di matlab e poi ad effettuare la regressione
+applica un filtro passa basso all'input
