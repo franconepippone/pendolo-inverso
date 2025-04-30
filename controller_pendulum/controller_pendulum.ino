@@ -82,10 +82,11 @@ double loopSF(double dt) {
   return -(K.w1 * state.theta + K.w2 * state.theta_dot + K.w3 * state.pos + K.w4 * state.vel) - sf_integral.getIntegral();
 }
 
-/* Schema di controllo a due pid a cascata: il pid interno tiene il pendolo dritto,
-il pid esterno porta il carrello nella posizione indicata da "target" */
+// loop di controllo con due PID 
 double loopPID(double dt) {
+  // pid outer stabilizza il carello
   double r = pid_outer.control(dt, cart_target - state.pos);
+  // pid inner stabilizza l'angolo
   double acc = pid_inner.control(dt, state.theta);
 
   double u = acc - r;
