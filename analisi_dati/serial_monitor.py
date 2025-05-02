@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Any
 import serial
 import threading
 

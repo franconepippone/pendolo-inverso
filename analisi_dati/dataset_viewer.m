@@ -1,6 +1,6 @@
 %% Data viewer and editor
 
-data = readtable("per_tesina/PID_VELOCI.csv");
+data = readtable("analisi_dati/fixed_reading/PID-lenti-tracking-target.csv", "CommentStyle", "#");
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 

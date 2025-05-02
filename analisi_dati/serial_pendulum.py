@@ -45,7 +45,7 @@ class InvertedPendulum:
             case _:
                 raise ValueError(f"Invalid data gathering option: {mode}")
 
-    def read_state(self) -> Tuple[float] | None:
+    def read_state(self) -> Tuple[float, ...] | None:
         """
         Preleva e decodifica un eventuale pacchetto di stato ricevuto tramite seriale nel buffer.
         Nessuna garanzia che il pacchetto sia effettivamente l'ultimo ricevuto, potrebbe essere il
@@ -62,7 +62,7 @@ class InvertedPendulum:
                     return self._decode_packet_text(line.decode())
 
                 case "OFF":
-                    return ValueError("Cannot read state because state gathering is not enabled")
+                    raise ValueError("Cannot read state because state gathering is not enabled")
 
         except serial.SerialException:
             print("No state packet were available")
@@ -98,7 +98,7 @@ class InvertedPendulum:
             return False
 
     @staticmethod
-    def _decode_packet_text(line: str) -> Tuple[float] | None:
+    def _decode_packet_text(line: str) -> Tuple[float, ...] | None:
         try:
             values = line.split(",")
             return tuple([int(values[0])] + [float(val) for val in values[1:]])
@@ -106,19 +106,19 @@ class InvertedPendulum:
             return None
 
     @staticmethod
-    def _decode_packet_bin(linebin: bytes) -> Tuple[float] | None:
+    def _decode_packet_bin(linebin: bytes) -> Tuple[float, ...] | None:
         if linebin[0:2] != "S-".encode():
             print(f"Invalid starting symbol found: {linebin[0:2]}")
             return
 
         linebin = linebin[2:]
         try:
-            timestamp = int.from_bytes(linebin[0:4], "little", signed=False)
-            u = struct.unpack('<f', linebin[4:8])[0]
-            theta = struct.unpack('<d', linebin[8:16])[0]
-            theta_dot = struct.unpack('<d', linebin[16:24])[0]
-            pos = struct.unpack('<d', linebin[24:32])[0]
-            vel = struct.unpack('<d', linebin[32:40])[0]
+            timestamp: int = int.from_bytes(linebin[0:4], "little", signed=False)
+            u: float = struct.unpack('<f', linebin[4:8])[0]
+            theta: float = struct.unpack('<d', linebin[8:16])[0]
+            theta_dot: float = struct.unpack('<d', linebin[16:24])[0]
+            pos: float = struct.unpack('<d', linebin[24:32])[0]
+            vel: float = struct.unpack('<d', linebin[32:40])[0]
             return (timestamp, u, theta, theta_dot, pos, vel)
 
         except struct.error as e:
@@ -130,7 +130,7 @@ class InvertedPendulum:
         self.ser.reset_input_buffer()
 
     @staticmethod
-    def save_state_to_file(state: Tuple[float], f: TextIO) -> None:
+    def save_state_to_file(state: Tuple[float, ...], f: TextIO) -> None:
         """
         Prende una tupla di stato e la aggiunge formattata come nuova riga in un file csv aperto.
         """

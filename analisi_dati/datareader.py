@@ -16,7 +16,7 @@ datetime_string = now.strftime("%d-%m-%Y_h%H-%M-%S")
 FILENAME = f"SESSION_{datetime_string}.csv"
 print("Using file:", FILENAME)
 
-pendolo = InvertedPendulum("COM8")
+pendolo = InvertedPendulum("COM4")
 esito = pendolo.connect()
 print("Pendolo connesso: ", esito)
 if not esito:
@@ -25,15 +25,11 @@ if not esito:
 time.sleep(3)
 print("Abilitando la trasmissione dello stato su seriale...")
 pendolo.gather_data("BIN")
-pendolo.send_command("get-pid1")
-pendolo.send_command("get-pid2")
-time.sleep(.5)
-print(pendolo.ser.readline())
-print(pendolo.ser.readline())
-print(pendolo.ser.readline())
-print(pendolo.ser.readline())
-time.sleep(.5)
-print(pendolo.ser.readline())
+time.sleep(.2)
+pendolo.send_command("set-pid2 .2 .02 5")
+time.sleep(.2)
+pendolo.send_command("set-pid1 3000 0 200")
+pendolo.set_target(15)
 
 x = 0
 next_x = random.randrange(500, 1000)
@@ -42,7 +38,13 @@ wanted_target = 0
 pos = 0
 
 with open(FILENAME, "a") as f:
-    f.write(f"timestamp, input, theta, theta_dot, pos, vel\n")
+    # commenti al file csv
+    f.write(f"# Date of execution: {now.strftime("%d/%m/%Y at time %H:%M:%S")}\n\n")
+    f.write(f"# Controller settings:\n")
+    f.write(f"# set-pid2 .2 .02 5\n")
+    f.write(f"# set-pid1 3000 0 200\n")
+
+    f.write(f"\ntimestamp, input, theta, theta_dot, pos, vel\n")
 
     print("Entrando nel loop...")
     pendolo.clear_serial()
@@ -56,7 +58,7 @@ with open(FILENAME, "a") as f:
         #wanted_target += joypad.get_axis(0) * 5
         #target += (wanted_target - target) * .01
         i += 1
-        if i > 200000:
+        if i > 500:
             i = 0
             target = math.sin(time.time() * .3) * 25
             pendolo.set_target(target)

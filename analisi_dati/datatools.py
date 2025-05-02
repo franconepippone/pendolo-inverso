@@ -1,25 +1,37 @@
+from typing import TextIO, Tuple, Dict, Callable
 import os
 import sys
 
 help_msg = """
 Modulo di utilità pensato per essere eseguito su linea di comando per effettuare operazioni comuni
 sui file dataset in formato csv. Comandi disponibili:
-
-    -> python datatools.py retime <target-file>: riscrive la colonna timestamp di un file in modo che la prima acquisizione parta dal tempo 0.
-    -> python datatools.py duration <target-file>: legge la durata totale della sessione di acquisizione.
-    -> python datatools.py remdups <target-file>: rimuove tutte le righe con timestamp duplicati o fuori ordine cronologico
 """
-
 
 TMP_FILENAME = "_temp_"
 
+commands: Dict[str, Callable] = {}
+
+def command(name: str):
+    def decorator(f):
+        commands[name] = f
+        return f
+
+    return decorator
+
+def skip_comments(f: TextIO):
+    line = f.readline()
+    while line.startswith("#") or line.strip() == "":
+        line = f.readline()
+    return line
+
+@command("retime")
 def recenter_time(target: str):
     """
     Riscrive la colonna timestamp di un file in modo tale che il primo frame parta da 0.
     """
 
     with open(target, "r") as f_src:
-        heading = f_src.readline() # riga di intestazione
+        heading = skip_comments(f_src) # riga di intestazione
         fist_line_contents = [st.strip() for st in f_src.readline().split(",")]
         time_offset = int(fist_line_contents[0])
         print("time offset: ", time_offset)
@@ -42,13 +54,39 @@ def recenter_time(target: str):
     os.remove(target)
     os.rename(TMP_FILENAME, target)
 
+@command("constrain")
+def constrain_input(target: str, bound_str: str):
+    """
+    Riscive la colonna di input restringendo l'ingresso al range indicato
+    """
+
+    bound = float(bound_str)
+
+    with open(target, "r") as f_src:
+        heading = skip_comments(f_src) # riga di intestazione
+        with open(TMP_FILENAME, "w") as f_dst:
+            f_dst.write(heading)
+
+            for line in f_src:
+                #print(line, end="")
+                line_contents = [st.strip() for st in line.split(",")]
+                input = float(line_contents[1])
+                input = max(min(input, bound), -bound)    #constrain input
+                line_contents[1] = str(input)
+                new_line = ", ".join(line_contents) + "\n"
+                f_dst.write(new_line)
+
+    os.remove(target)
+    os.rename(TMP_FILENAME, target)
+
+@command("duration")
 def get_timespan(target: str):
     """
     Prende un file e legge la durata totale della sessione di acquisizione.
     """
 
     with open(target, "r") as f:
-        f.readline() # intestazione
+        skip_comments(f) # intestazione
         line_contents = f.readline().split(",") # prima riga di dati
         start_time = int(line_contents[0])
 
@@ -89,13 +127,14 @@ def unwrap(target: str):
                 
                 word += char
 
+@command("remdups")
 def remove_duplicate_timestamps(target: str):
     """
     Elimina tutte le righe con timestamp duplicato.
     """
 
     with open(target, "r") as f_src:
-        heading = f_src.readline() # riga di intestazione
+        heading = skip_comments(f_src) # riga di intestazione
 
         with open(TMP_FILENAME, "w") as f_dst:
             f_dst.write(heading)
@@ -118,32 +157,38 @@ def remove_duplicate_timestamps(target: str):
     os.remove(target)
     os.rename(TMP_FILENAME, target)
 
+@command("help")
+def help():
+    """Mostra questo messaggio
+    """
+    print(help_msg)
+    for name, f in commands.items():
+        print(name, end="")
+        if f.__doc__:
+            print("  \t-->\t", f.__doc__.strip())
+        else:
+            print("  \t-->\t???")
 
+@command("all")
+def do_all_processing(path: str):
+    """
+    Esegue tutti i preprocessamenti usuali per l'impiego di un file per l'analisi
+    remdups, retime, duration
+    """
+    recenter_time(target=path)
+    remove_duplicate_timestamps(target=path)
+    get_timespan(path)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        command = sys.argv[1]
+        commstr = sys.argv[1]
 
-        if len(sys.argv) > 2:
-            target_file = sys.argv[2]
-
-        match command:
-            case "retime":
-                recenter_time(target=target_file)
-            
-            case "duration":
-                get_timespan(target=target_file)
-            
-            case "remdups":
-                remove_duplicate_timestamps(target=target_file)
-
-            case "help":
-                print(help_msg)
-            
-            case "all":
-                recenter_time(target=target_file)
-                remove_duplicate_timestamps(target=target_file)
-
-            case _:
-                print(f"Unknown command: {command}")
-
+        # ottiene il comando dal dizionario
+        func: Callable | None = commands.get(commstr)
+        if func:
+            # passa tutti i parametri forniti dal terminale direttamente
+            func(*sys.argv[2:])
+        else:
+            print(f"Unknown command: {commstr}")
+    else:
+        help()

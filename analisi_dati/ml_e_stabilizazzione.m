@@ -4,7 +4,7 @@ clc
 format long
 
 %% Caricamento del dataset
-data = readtable("buone/libero.csv");
+data = readtable("analisi_dati/fixed_reading/PID-lenti-tracking-target.csv", "CommentStyle", "#");
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 STATES = STATES(1:end-100, :);

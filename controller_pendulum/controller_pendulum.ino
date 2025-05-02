@@ -347,9 +347,6 @@ void loop()
     state.vel = cart.getVelocity();
     state.pos = cart.getPosition();
 
-    if (gather_data == 'T') printState(u);
-    if (gather_data == 'B') printStateBin(u);
-
     // controller (approccio a state-machine)
     switch (currentState) {
 
@@ -394,7 +391,6 @@ void loop()
           break;
         }
 
-...
         // depending on 
         switch (currentMode) {
         case ControllerType::PID:
@@ -408,10 +404,11 @@ void loop()
           break;
         }
         break;
-...
+    } // end of state machine
 
-
-    }
+    // scrive lo stato DOPO aver calcolato l'ingresso
+    if (gather_data == 'T') printState(u);
+    if (gather_data == 'B') printStateBin(u);
   }
 
   // aggiorna lo stepper fuori dal loop a 100Hz, per avere una risposta più fluida possibile.
