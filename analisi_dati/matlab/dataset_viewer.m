@@ -1,6 +1,11 @@
+close all 
+clear
+clc
+format long
+
 %% Data viewer and editor
 
-data = readtable("analisi_dati/fixed_reading/PID-lenti-tracking-target.csv", "CommentStyle", "#");
+data = readtable("fixed_reading/PID-lenti-tracking-target.csv", "CommentStyle", "#");
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 
@@ -25,18 +30,20 @@ INPUTS_NEW(:, 1) = interp1(old_timestamps_s, data.input, new_timestamps, 'pchip'
 TIMEWINDOW_VIEW = [90 95]
 
 % finestra delle iterazioni visualizzate sul grafico
-ITER_WINDOW = 1:N;
+ITER_WINDOW = 1:10000;
 %ITER_WINDOW = 1070:1800;
 
 % Plot dello stato dal dataset e interpolato
-figure(1)
-plot(ITER_WINDOW, [INPUTS_NEW(ITER_WINDOW) STATES_NEW(ITER_WINDOW, :)]);
+figure()
+%plot(new_timestamps(ITER_WINDOW), [INPUTS_NEW(ITER_WINDOW) STATES_NEW(ITER_WINDOW, :)]); hold on;
+plot(old_timestamps_s(ITER_WINDOW), [data.input(ITER_WINDOW) STATES(ITER_WINDOW, :)]);
 legend({'input', 'theta', "theta'", 'position', 'velocity'});
+
 
 TIME_START = 45
 TIME_END = 49
 
-figure(2)
+figure()
 title('Dati raccolti');
 subplot(2,1,1);  % 2 righe, 1 colonna, primo plot
 plot(new_timestamps(ITER_WINDOW) - TIME_START, rad2deg(STATES_NEW(ITER_WINDOW, 1)), 'LineWidth',1.5);
