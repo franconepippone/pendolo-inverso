@@ -1,3 +1,10 @@
 prova regressione con gain del pid piu lenti
 prova a post processare i dati con il tool di matlab e poi ad effettuare la regressione
 applica un filtro passa basso all'input
+
+
+è possibile che ci sia un problema nell'utilizzare i dati processato con l'interpolazione: diversi
+tipi di interpolazion portano a performance nel testing diverse 
+
+L'errore sul dataset di test è stranamente sempre piu alto di quello sul dataset di train ???
+- il dataset di test conteneva solo un elemento. Con uno split del 50% gli errori sono di 0.89 su entrambi

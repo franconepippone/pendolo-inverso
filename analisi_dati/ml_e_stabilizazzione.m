@@ -4,7 +4,7 @@ clc
 format long
 
 %% Caricamento del dataset
-data = readtable("analisi_dati/fixed_reading/PID-lenti-tracking-target.csv", "CommentStyle", "#");
+data = readtable("analisi_dati/bad/buone/libero_2.csv", "CommentStyle", "#");
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 STATES = STATES(1:end-100, :);
@@ -27,7 +27,7 @@ INPUTS_NEW = zeros(N, 1);
 
 % popola le matrici di stato nuovo interpolando e ricampionando alla
 % frequenza specificata
-STATES_NEW(:, 1) = interp1(old_timestamps_s, data.theta, new_timestamps, 'pchip')';
+STATES_NEW(:, 1) = interp1(old_timestamps_s, data.theta, new_timestamps, 'spline')';
 STATES_NEW(:, 2) = interp1(old_timestamps_s, data.theta_dot, new_timestamps, 'pchip');
 STATES_NEW(:, 3) = interp1(old_timestamps_s, data.pos, new_timestamps, 'pchip');
 STATES_NEW(:, 4) = interp1(old_timestamps_s, data.vel, new_timestamps, 'pchip');
@@ -47,7 +47,7 @@ disp(N)
 % isolare una specifica finestra temporale, o per tagliare fuori porzioni
 % di dati rumorose o troppo instabili)
 
-train_percentuale = .8; % percentuale del dataset che viene usata come training
+train_percentuale = .1; % percentuale del dataset che viene usata come training
 TRAIN_WINDOW = 1:round((N-1) * train_percentuale); % indici per estrarre la percentuale specificata
 %TRAIN_WINDOW = 8800:(N-1)
 
@@ -61,7 +61,21 @@ M_hat = X_train\Y_train;
 A = M_hat(1:4, :)';
 B = M_hat(5, :)';
 
-%% Testing
+%% Testing sui dati di training
+
+Y_predicted = X_train * M_hat;
+err = Y_train - Y_predicted;
+
+figure()
+plot(err);
+title('Errore sul dataset di train.');
+grid on;
+
+disp("Root mean squared error (train):")
+rmse_value = sqrt(mean((Y_train - Y_predicted).^2, 'all'));
+disp(rmse_value)
+
+%% Testing sui dati di testing
 
 TEST_WINDOW = round((N-1) * train_percentuale):(N-1); % prende la restante parte del dataset
 
@@ -71,12 +85,12 @@ X_test = X(TEST_WINDOW, :);
 Y_predicted = X_test * M_hat;
 err = Y_test - Y_predicted;
 
-figure(1)
+figure()
 plot(err);
 title('Errore sul dataset di test.');
 grid on;
 
-disp("Root mean squared error:")
+disp("Root mean squared error (test):")
 rmse_value = sqrt(mean((Y_test - Y_predicted).^2, 'all'));
 disp(rmse_value)
 
@@ -90,7 +104,7 @@ ITER_WINDOW = 900:9000;
 TIMEWINDOW_VIEW = [new_timestamps(ITER_WINDOW(1)), new_timestamps(ITER_WINDOW(end))];
 
 % Plot della porzione di dataset specificato da ITER_WINDOW
-figure(2)
+figure()
 plot(new_timestamps(ITER_WINDOW), STATES_NEW(ITER_WINDOW, :));
 legend({'theta', "theta'", 'position', 'velocity'});
 
@@ -119,7 +133,7 @@ x0 = STATES_NEW(ITER_START, :); % estrae lo stato a quell'iterazione
 % riproducendo gli ingressi presenti nel dataset
 y = lsim(sys, U, t, x0);
 
-figure(3)
+figure()
 plot(t, y);
 legend({'theta', "theta'", 'position', 'velocity'}); 
 ylim([-23, 23]);
@@ -129,7 +143,7 @@ grid on;
 
 % Plot dell'errore nel tempo
 
-figure(4)
+figure()
 plot(t, STATES_NEW(ITER_START:ITER_MAX, :) - y);
 legend({'theta err', "theta' err", 'position err', 'velocity err'}); 
 ylim([-23, 23]);
@@ -153,7 +167,7 @@ disp(K);
 %K = [7000 600 5 15]
 eigs(A - B*K)
 
-figure(5)
+figure()
 
 sys_cl = ss(A - B*K, zeros(4, 0), eye(4), 0, TIMESTEP);
 
@@ -177,7 +191,7 @@ disp('Closed-loop eigenvalues:');
 disp(E);
 disp(P);
 
-figure(6)
+figure()
 
 sys_cl_LQR = ss(A - B*K, zeros(4, 0), eye(4), 0, TIMESTEP);
 

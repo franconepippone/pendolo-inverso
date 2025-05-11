@@ -7,12 +7,14 @@ Modulo di utilità pensato per essere eseguito su linea di comando per effettuar
 sui file dataset in formato csv. Comandi disponibili:
 """
 
-TMP_FILENAME = "_temp_"
+TMP_FILENAME = "_datatools_tmp_"
 
 commands: Dict[str, Callable] = {}
 
-def command(name: str):
-    def decorator(f):
+def command(name: str) -> Callable:
+    """Decora una funzione con questo decoratore per renderla un comando eseguibile tramite terminale
+    """
+    def decorator(f: Callable) -> Callable:
         commands[name] = f
         return f
 
@@ -57,7 +59,7 @@ def recenter_time(target: str):
 @command("constrain")
 def constrain_input(target: str, bound_str: str):
     """
-    Riscive la colonna di input restringendo l'ingresso al range indicato
+    Riscrive la colonna di input restringendo l'ingresso al range indicato
     """
 
     bound = float(bound_str)
@@ -95,7 +97,9 @@ def get_timespan(target: str):
         for line in f:
             line_contents = line.split(",")
             time = int(line_contents[0])
-    
+        else:
+            time = 0
+
     secs = (time - start_time) * 0.001
     formatted = f"{int(secs // 60)} minutes and {round(secs % 60, 2)} seconds"
     print(f"Total timespan: {formatted}")

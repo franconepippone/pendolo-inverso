@@ -57,7 +57,9 @@ struct pendulumState {
 } state;
 
 // ingresso, deve persistere anche fuori dal ciclo di loop
-float u; 
+float u = 0.0;
+float u_smooth = 0.0;
+float input_smoothing = .5;
 // posizione da raggiungere del carrello
 double cart_target = 0.0;
 // angolo di offset interno
@@ -133,7 +135,7 @@ void processSerialCommands() {
       Serial.println(direct_speed_drive);
 
     // modifica il loop di controllo utilizzato per il controllo del pendolo
-    }else if (cmd == "set-mode") {
+    } else if (cmd == "set-mode") {
       if (arg == "PID") {
         currentMode = ControllerType::PID;
 
@@ -186,6 +188,11 @@ void processSerialCommands() {
     // stop di sicurezza
     } else if (cmd == "stop") {
       cart.motor_enabled(false);
+    
+    // se il pendolo è fermo, effettua uno swing up
+    } else if (cmd == "input-smoothing") {
+      float alpha = arg.toDouble();
+      constrain(alpha, 0, 1.0);
     
     // se il pendolo è fermo, effettua uno swing up
     } else if (cmd == "swing-up") {
@@ -414,6 +421,7 @@ void loop()
   // aggiorna lo stepper fuori dal loop a 100Hz, per avere una risposta più fluida possibile.
   const float dt_real = clock_outer.getdt();
   u = constrain(u, -INPUT_RANGE, INPUT_RANGE);
+  u_smooth += (u - u_smooth) * 0.5;
 
   if (currentMode == ControllerType::SPEED) cart.driveSpeed(direct_speed_drive);
   else cart.driveAccel(dt_real, u); // la direzione di positiva del carrello è antioraria
