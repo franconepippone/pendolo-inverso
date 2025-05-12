@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://ekgs8wggy05k"
+
+[deps]
+
+files=["res://readings/ciccio.n.translation", "res://readings/ciccio.p.translation", "res://readings/ciccio.u.translation", "res://readings/ciccio.t.translation"]
+
+source_file="res://readings/ciccio.csv"
+dest_files=["res://readings/ciccio.n.translation", "res://readings/ciccio.p.translation", "res://readings/ciccio.u.translation", "res://readings/ciccio.t.translation"]
+
+[params]
+
+compress=true
+delimiter=0

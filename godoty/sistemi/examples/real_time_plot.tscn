@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://ytxuwsimtrbl"]
+
+[ext_resource type="Script" path="res://examples/real_time_plot.gd" id="1_apgog"]
+[ext_resource type="Script" path="res://addons/graph_2d/graph_2d.gd" id="2_bcgdy"]
+
+[node name="RealTimePlot" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_apgog")
+
+[node name="Graph2D" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -121.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_bcgdy")
+x_max = 5.0
+x_label = "seconds"
+y_min = -11.0
+y_max = 110.0
+y_label = "%"
+grid_horizontal_visible = true
+grid_vertical_visible = true
+
+[node name="VSlider" type="VSlider" parent="."]
+layout_mode = 0
+offset_left = 1084.0
+offset_top = 42.0
+offset_right = 1100.0
+offset_bottom = 613.0
+value = 50.0

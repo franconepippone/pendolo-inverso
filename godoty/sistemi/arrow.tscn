@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://b6bfrpaukp6y1"]
+
+[ext_resource type="Script" path="res://arrow.gd" id="1_s5jhc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_60fux"]
+albedo_color = Color(1, 0.219608, 0.32549, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_xlj8w"]
+material = SubResource("StandardMaterial3D_60fux")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.7
+radial_segments = 32
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_q43tg"]
+material = SubResource("StandardMaterial3D_60fux")
+top_radius = 0.0
+bottom_radius = 0.342
+height = 0.3
+radial_segments = 32
+
+[node name="arrow" type="Node3D"]
+script = ExtResource("1_s5jhc")
+
+[node name="body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+mesh = SubResource("CylinderMesh_xlj8w")
+
+[node name="body2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+mesh = SubResource("CylinderMesh_q43tg")
