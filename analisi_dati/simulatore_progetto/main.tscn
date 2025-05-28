@@ -1,13 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://d3fao567ce126"]
+[gd_scene load_steps=8 format=3 uid="uid://d3fao567ce126"]
 
-[ext_resource type="Script" path="res://scene handler.gd" id="1_5amkv"]
-[ext_resource type="Script" path="res://physics.gd" id="1_gg3bh"]
-[ext_resource type="Shader" path="res://main.gdshader" id="1_w3frx"]
-[ext_resource type="Script" path="res://controller.gd" id="2_otpyx"]
+[ext_resource type="Script" uid="uid://dfeudaq7ko267" path="res://scene handler.gd" id="1_5amkv"]
+[ext_resource type="Script" uid="uid://dqt2s406q6h2d" path="res://physics.gd" id="1_gg3bh"]
+[ext_resource type="Script" uid="uid://msl3jlm201hd" path="res://controller.gd" id="2_otpyx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_erllf"]
-render_priority = 0
-shader = ExtResource("1_w3frx")
 
 [sub_resource type="BoxMesh" id="BoxMesh_ipbmb"]
 size = Vector3(10, 10, 10)

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cbjjaf11lvlve"]
 
-[ext_resource type="Script" path="res://collapsable.gd" id="1_yiojb"]
+[ext_resource type="Script" uid="uid://dm135nxul3758" path="res://collapsable.gd" id="1_yiojb"]
 
 [node name="collapsable" type="VBoxContainer"]
 anchors_preset = 15

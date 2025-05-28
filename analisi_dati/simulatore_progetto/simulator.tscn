@@ -1,10 +1,10 @@
 [gd_scene load_steps=18 format=3 uid="uid://c1mkd1l3tepiy"]
 
-[ext_resource type="Script" path="res://InputHandler.gd" id="1_avpkb"]
-[ext_resource type="Script" path="res://physics.gd" id="1_wngnx"]
-[ext_resource type="Script" path="res://controller.gd" id="2_xoj7h"]
-[ext_resource type="Script" path="res://cart_display.gd" id="3_lkac3"]
-[ext_resource type="Script" path="res://target_model.gd" id="5_a7wyx"]
+[ext_resource type="Script" uid="uid://ctni608swqmof" path="res://InputHandler.gd" id="1_avpkb"]
+[ext_resource type="Script" uid="uid://dqt2s406q6h2d" path="res://physics.gd" id="1_wngnx"]
+[ext_resource type="Script" uid="uid://msl3jlm201hd" path="res://controller.gd" id="2_xoj7h"]
+[ext_resource type="Script" uid="uid://c86n6p7v6pr08" path="res://cart_display.gd" id="3_lkac3"]
+[ext_resource type="Script" uid="uid://bbwkcm6ffps6r" path="res://target_model.gd" id="5_a7wyx"]
 [ext_resource type="PackedScene" uid="uid://b6bfrpaukp6y1" path="res://arrow.tscn" id="6_2bruk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_oovpc"]
@@ -57,6 +57,11 @@ albedo_color = Color(1, 0, 0.129412, 0.498039)
 size = Vector3(0.233, 0.913, 1.927)
 
 [node name="simulation environment" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.744312, -0.405274, 0.530805, -0.667833, -0.451685, 0.591592, 0, -0.794817, -0.606849, 0, 6.71361, 0)
+light_energy = 0.3
+shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_byl35")

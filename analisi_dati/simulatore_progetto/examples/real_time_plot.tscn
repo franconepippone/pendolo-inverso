@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ytxuwsimtrbl"]
 
-[ext_resource type="Script" path="res://examples/real_time_plot.gd" id="1_apgog"]
-[ext_resource type="Script" path="res://addons/graph_2d/graph_2d.gd" id="2_bcgdy"]
+[ext_resource type="Script" uid="uid://6ja2uwr00d71" path="res://examples/real_time_plot.gd" id="1_apgog"]
+[ext_resource type="Script" uid="uid://te0oxa8cogxc" path="res://addons/graph_2d/graph_2d.gd" id="2_bcgdy"]
 
 [node name="RealTimePlot" type="Control"]
 layout_mode = 3

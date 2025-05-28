@@ -1,12 +1,12 @@
 [gd_scene load_steps=9 format=3 uid="uid://b03vob77kiiig"]
 
 [ext_resource type="PackedScene" uid="uid://c1mkd1l3tepiy" path="res://simulator.tscn" id="1_bv3ai"]
-[ext_resource type="Script" path="res://simulator_window.gd" id="1_ccm4y"]
+[ext_resource type="Script" uid="uid://dtoo8gjytj3bx" path="res://simulator_window.gd" id="1_ccm4y"]
 [ext_resource type="PackedScene" uid="uid://digpdhdemtlyi" path="res://real_time_variable_plot.tscn" id="3_7fye7"]
-[ext_resource type="Script" path="res://addons/graph_2d/custom_nodes/legend.gd" id="4_38hed"]
-[ext_resource type="Script" path="res://addons/graph_2d/custom_nodes/coordinate.gd" id="5_7ko4f"]
-[ext_resource type="Script" path="res://addons/graph_2d/custom_nodes/axis.gd" id="6_si02b"]
-[ext_resource type="Script" path="res://addons/graph_2d/custom_nodes/grid.gd" id="7_776f0"]
+[ext_resource type="Script" uid="uid://8pdtuj1g0oie" path="res://addons/graph_2d/custom_nodes/legend.gd" id="4_38hed"]
+[ext_resource type="Script" uid="uid://hp3u6j80mhrf" path="res://addons/graph_2d/custom_nodes/coordinate.gd" id="5_7ko4f"]
+[ext_resource type="Script" uid="uid://iavila7mbw33" path="res://addons/graph_2d/custom_nodes/axis.gd" id="6_si02b"]
+[ext_resource type="Script" uid="uid://beb8ymine6c0d" path="res://addons/graph_2d/custom_nodes/grid.gd" id="7_776f0"]
 [ext_resource type="PackedScene" uid="uid://cbjjaf11lvlve" path="res://collapsable.tscn" id="8_nx4xn"]
 
 [node name="simulator" type="Control"]
@@ -44,6 +44,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
+
+[node name="Button5" type="Button" parent="HBoxContainer/VBoxContainer/option_panel/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "No control
+"
 
 [node name="Button" type="Button" parent="HBoxContainer/VBoxContainer/option_panel/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -387,11 +393,12 @@ script = ExtResource("7_776f0")
 [connection signal="disable_plot" from="." to="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable5/real_time_variable_plot2" method="disable"]
 [connection signal="disable_plot" from="." to="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable3/real_time_variable_plot3" method="disable"]
 [connection signal="save_data" from="." to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="save_data"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button5" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="set_mode" binds= [2]]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="set_mode" flags=3 binds= [1]]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button2" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="set_mode" flags=3 binds= [0]]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button3" to="." method="_on_button_3_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button4" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="reset"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button4" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/plant" method="set_state" flags=3 binds= [0.0, 0.0, 0.0, 0.0]]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button4" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/plant" method="set_state" flags=3 binds= [0.01, 0.0, 0.0, 0.0]]
 [connection signal="toggled" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/show graphs" to="." method="_on_show_graphs_toggled"]
 
 [editable path="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment"]

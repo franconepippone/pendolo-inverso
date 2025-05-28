@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://br4viqfrbdlpe"]
 
-[ext_resource type="Script" path="res://examples/single_plot.gd" id="1_qmytq"]
-[ext_resource type="Script" path="res://addons/graph_2d/graph_2d.gd" id="2_2ul57"]
+[ext_resource type="Script" uid="uid://byb0e2n5stec6" path="res://examples/single_plot.gd" id="1_qmytq"]
+[ext_resource type="Script" uid="uid://te0oxa8cogxc" path="res://addons/graph_2d/graph_2d.gd" id="2_2ul57"]
 
 [node name="SinglePlot" type="Control"]
 layout_mode = 3
