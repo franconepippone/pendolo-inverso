@@ -1,15 +1,13 @@
 extends Node
 
-
-@onready var plant = get_parent().get_node("plant")
-@onready var controller = get_parent().get_node("controller")
-
 var virtual_target = 0
+var controller_target_x: float = 0
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
+func get_normalized_mouse_position() -> Vector2:
+	var viewport_size = get_viewport().get_visible_rect().size
+	var mouse_pos = get_viewport().get_mouse_position()
+	var centered = mouse_pos - viewport_size * 0.5
+	return centered / (viewport_size * 0.5)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -25,5 +23,4 @@ func _process(delta):
 	var fac = 1920 / viewport_size.x
 	virtual_target = (norm_mouse.x - 0.5) * 18 / fac
 	
-	controller.target_x += (virtual_target - controller.target_x) * .1
-	print(plant.x)
+	controller_target_x += (virtual_target - controller_target_x) * .1

@@ -1,22 +1,22 @@
-[gd_scene load_steps=9 format=3 uid="uid://b03vob77kiiig"]
+[gd_scene load_steps=9 format=3 uid="uid://csr88xqwj65f7"]
 
-[ext_resource type="PackedScene" uid="uid://c1mkd1l3tepiy" path="res://simulator.tscn" id="1_bv3ai"]
-[ext_resource type="Script" uid="uid://dtoo8gjytj3bx" path="res://simulator_window.gd" id="1_ccm4y"]
-[ext_resource type="PackedScene" uid="uid://digpdhdemtlyi" path="res://utils/real_time_variable_plot.tscn" id="3_7fye7"]
-[ext_resource type="Script" uid="uid://8pdtuj1g0oie" path="res://addons/graph_2d/custom_nodes/legend.gd" id="4_38hed"]
-[ext_resource type="Script" uid="uid://hp3u6j80mhrf" path="res://addons/graph_2d/custom_nodes/coordinate.gd" id="5_7ko4f"]
-[ext_resource type="Script" uid="uid://iavila7mbw33" path="res://addons/graph_2d/custom_nodes/axis.gd" id="6_si02b"]
-[ext_resource type="Script" uid="uid://beb8ymine6c0d" path="res://addons/graph_2d/custom_nodes/grid.gd" id="7_776f0"]
-[ext_resource type="PackedScene" uid="uid://cbjjaf11lvlve" path="res://utils/collapsable.tscn" id="8_nx4xn"]
+[ext_resource type="Script" uid="uid://dtoo8gjytj3bx" path="res://simulator_window.gd" id="1_i3i81"]
+[ext_resource type="PackedScene" uid="uid://yeyusrjeigw0" path="res://3Dplayer/3dplayer.tscn" id="2_i3i81"]
+[ext_resource type="PackedScene" uid="uid://cbjjaf11lvlve" path="res://utils/collapsable.tscn" id="3_sffji"]
+[ext_resource type="PackedScene" uid="uid://digpdhdemtlyi" path="res://utils/real_time_variable_plot.tscn" id="4_nlubn"]
+[ext_resource type="Script" uid="uid://8pdtuj1g0oie" path="res://addons/graph_2d/custom_nodes/legend.gd" id="5_v8k4o"]
+[ext_resource type="Script" uid="uid://hp3u6j80mhrf" path="res://addons/graph_2d/custom_nodes/coordinate.gd" id="6_d0i7v"]
+[ext_resource type="Script" uid="uid://iavila7mbw33" path="res://addons/graph_2d/custom_nodes/axis.gd" id="7_w48v2"]
+[ext_resource type="Script" uid="uid://beb8ymine6c0d" path="res://addons/graph_2d/custom_nodes/grid.gd" id="8_kj01p"]
 
-[node name="simulator" type="Control"]
+[node name="mainview" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ccm4y")
+script = ExtResource("1_i3i81")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -112,47 +112,35 @@ text = "show graphs
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="view3D" parent="HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_i3i81")]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-stretch = true
-
-[node name="SubViewport" type="SubViewport" parent="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer"]
-handle_input_locally = false
-size = Vector2i(1920, 996)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-
-[node name="simulation environment" parent="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport" instance=ExtResource("1_bv3ai")]
 
 [node name="graphs" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
 visible = false
 custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 
-[node name="collapsable2" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("8_nx4xn")]
+[node name="collapsable2" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("3_sffji")]
 layout_mode = 2
 text = "theta"
 
-[node name="real_time_variable_plot" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable2" instance=ExtResource("3_7fye7")]
+[node name="real_time_variable_plot" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable2" instance=ExtResource("4_nlubn")]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-source = NodePath("../../../SubViewportContainer/SubViewport/simulation environment/plant")
 var_name = "theta"
 time_window = 5.0
 
 [node name="graph" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable2/real_time_variable_plot" index="0"]
 y_label = "theta"
 
-[node name="collapsable4" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("8_nx4xn")]
+[node name="collapsable4" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("3_sffji")]
 layout_mode = 2
 text = "theta dot"
 
-[node name="real_time_variable_plot2" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable4" instance=ExtResource("3_7fye7")]
+[node name="real_time_variable_plot2" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable4" instance=ExtResource("4_nlubn")]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-source = NodePath("../../../SubViewportContainer/SubViewport/simulation environment/plant")
 var_name = "theta_prime"
 time_window = 5.0
 
@@ -176,7 +164,7 @@ offset_bottom = -50.0
 
 [node name="Legend" type="Control" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable4/real_time_variable_plot2/graph/PlotArea"]
 anchors_preset = 0
-script = ExtResource("4_38hed")
+script = ExtResource("5_v8k4o")
 
 [node name="55337" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable4/real_time_variable_plot2/graph/PlotArea/Legend"]
 layout_mode = 0
@@ -192,11 +180,11 @@ anchor_right = 1.0
 offset_right = -20.0
 grow_horizontal = 0
 text = "(0.0, 0.0)"
-script = ExtResource("5_7ko4f")
+script = ExtResource("6_d0i7v")
 
 [node name="Axis" type="Control" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable4/real_time_variable_plot2/graph" index="6"]
 anchors_preset = 0
-script = ExtResource("6_si02b")
+script = ExtResource("7_w48v2")
 
 [node name="XLabel" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable4/real_time_variable_plot2/graph/Axis"]
 layout_mode = 0
@@ -217,16 +205,15 @@ text = "theta dot"
 
 [node name="Grid" type="Control" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable4/real_time_variable_plot2/graph" index="7"]
 anchors_preset = 0
-script = ExtResource("7_776f0")
+script = ExtResource("8_kj01p")
 
-[node name="collapsable" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("8_nx4xn")]
+[node name="collapsable" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("3_sffji")]
 layout_mode = 2
 text = "position"
 
-[node name="real_time_variable_plot2" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable" instance=ExtResource("3_7fye7")]
+[node name="real_time_variable_plot2" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable" instance=ExtResource("4_nlubn")]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-source = NodePath("../../../SubViewportContainer/SubViewport/simulation environment/plant")
 var_name = "x"
 time_window = 5.0
 
@@ -235,14 +222,13 @@ y_min = -11.0
 y_max = 10.0
 y_label = "position"
 
-[node name="collapsable5" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("8_nx4xn")]
+[node name="collapsable5" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("3_sffji")]
 layout_mode = 2
 text = "velocity"
 
-[node name="real_time_variable_plot2" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable5" instance=ExtResource("3_7fye7")]
+[node name="real_time_variable_plot2" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable5" instance=ExtResource("4_nlubn")]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-source = NodePath("../../../SubViewportContainer/SubViewport/simulation environment/plant")
 var_name = "v"
 time_window = 5.0
 
@@ -268,7 +254,7 @@ offset_bottom = -50.0
 
 [node name="Legend" type="Control" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable5/real_time_variable_plot2/graph/PlotArea"]
 anchors_preset = 0
-script = ExtResource("4_38hed")
+script = ExtResource("5_v8k4o")
 
 [node name="55337" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable5/real_time_variable_plot2/graph/PlotArea/Legend"]
 layout_mode = 0
@@ -284,11 +270,11 @@ anchor_right = 1.0
 offset_right = -20.0
 grow_horizontal = 0
 text = "(0.0, 0.0)"
-script = ExtResource("5_7ko4f")
+script = ExtResource("6_d0i7v")
 
 [node name="Axis" type="Control" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable5/real_time_variable_plot2/graph" index="6"]
 anchors_preset = 0
-script = ExtResource("6_si02b")
+script = ExtResource("7_w48v2")
 
 [node name="XLabel" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable5/real_time_variable_plot2/graph/Axis"]
 layout_mode = 0
@@ -309,16 +295,15 @@ text = "velocity"
 
 [node name="Grid" type="Control" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable5/real_time_variable_plot2/graph" index="7"]
 anchors_preset = 0
-script = ExtResource("7_776f0")
+script = ExtResource("8_kj01p")
 
-[node name="collapsable3" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("8_nx4xn")]
+[node name="collapsable3" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs" instance=ExtResource("3_sffji")]
 layout_mode = 2
 text = "input"
 
-[node name="real_time_variable_plot3" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable3" instance=ExtResource("3_7fye7")]
+[node name="real_time_variable_plot3" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable3" instance=ExtResource("4_nlubn")]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-source = NodePath("../../../SubViewportContainer/SubViewport/simulation environment/controller")
 var_name = "u"
 time_window = 5.0
 
@@ -344,7 +329,7 @@ offset_bottom = -50.0
 
 [node name="Legend" type="Control" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable3/real_time_variable_plot3/graph/PlotArea"]
 anchors_preset = 0
-script = ExtResource("4_38hed")
+script = ExtResource("5_v8k4o")
 
 [node name="154459" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable3/real_time_variable_plot3/graph/PlotArea/Legend"]
 layout_mode = 0
@@ -360,11 +345,11 @@ anchor_right = 1.0
 offset_right = -20.0
 grow_horizontal = 0
 text = "(0.0, 0.0)"
-script = ExtResource("5_7ko4f")
+script = ExtResource("6_d0i7v")
 
 [node name="Axis" type="Control" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable3/real_time_variable_plot3/graph" index="6"]
 anchors_preset = 0
-script = ExtResource("6_si02b")
+script = ExtResource("7_w48v2")
 
 [node name="XLabel" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable3/real_time_variable_plot3/graph/Axis"]
 layout_mode = 0
@@ -385,23 +370,16 @@ text = "input"
 
 [node name="Grid" type="Control" parent="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable3/real_time_variable_plot3/graph" index="7"]
 anchors_preset = 0
-script = ExtResource("7_776f0")
+script = ExtResource("8_kj01p")
 
 [connection signal="disable_plot" from="." to="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable2/real_time_variable_plot" method="disable"]
 [connection signal="disable_plot" from="." to="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable4/real_time_variable_plot2" method="disable"]
 [connection signal="disable_plot" from="." to="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable/real_time_variable_plot2" method="disable"]
 [connection signal="disable_plot" from="." to="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable5/real_time_variable_plot2" method="disable"]
 [connection signal="disable_plot" from="." to="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable3/real_time_variable_plot3" method="disable"]
-[connection signal="save_data" from="." to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="save_data"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button5" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="set_mode" binds= [2]]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="set_mode" flags=3 binds= [1]]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button2" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="set_mode" flags=3 binds= [0]]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button3" to="." method="_on_button_3_pressed"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button4" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/controller" method="reset"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/Button4" to="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment/plant" method="set_state" flags=3 binds= [0.01, 0.0, 0.0, 0.0]]
 [connection signal="toggled" from="HBoxContainer/VBoxContainer/option_panel/HBoxContainer/show graphs" to="." method="_on_show_graphs_toggled"]
 
-[editable path="HBoxContainer/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/simulation environment"]
 [editable path="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable2/real_time_variable_plot"]
 [editable path="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable4/real_time_variable_plot2"]
 [editable path="HBoxContainer/VBoxContainer/HBoxContainer/graphs/collapsable/real_time_variable_plot2"]

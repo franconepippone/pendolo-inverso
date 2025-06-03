@@ -9,7 +9,7 @@ var v_prev: float = 0
 
 # constants
 @export var g: float = 9.81
-@export var l: float = 10
+@export var l: float = .10
 
 var force: float = 0
 var acc: float = 0
@@ -17,10 +17,11 @@ var acc: float = 0
 var angular_damp = .99
 var linear_damp = .99
 
-var dt = .1
-
 func sqr(x: float) -> float:
 	return x * x
+
+func get_state() -> PendState:
+	return PendState.new(theta, theta_prime, x, v, acc)
 
 func set_state(angle: float, omega: float, pos: float, vel: float):
 	theta = angle
@@ -82,6 +83,6 @@ func free_cart(dt):
 	#x += v * dt
 	#theta += theta_prime * dt
 	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+# advances one step in the simulation
+func advance(dt):
 	locked_cart(dt)

@@ -1,0 +1,207 @@
+[gd_scene load_steps=7 format=3 uid="uid://yeyusrjeigw0"]
+
+[ext_resource type="Script" uid="uid://bhb403oqjng6i" path="res://3Dplayer/view_3d.gd" id="1_0dfp3"]
+[ext_resource type="PackedScene" uid="uid://dipjdf0hrdwnu" path="res://3Dplayer/3denv.tscn" id="1_l8nqv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0dfp3"]
+bg_color = Color(0.568973, 0.568973, 0.568973, 1)
+
+[sub_resource type="Theme" id="Theme_din31"]
+Panel/styles/panel = SubResource("StyleBoxFlat_0dfp3")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a4d87"]
+bg_color = Color(0.878231, 0.142894, 0.0958591, 1)
+border_color = Color(0.95409, 0.723573, 0.828621, 1)
+corner_radius_top_left = 100
+corner_radius_top_right = 100
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
+
+[sub_resource type="Theme" id="Theme_332a8"]
+Panel/styles/panel = SubResource("StyleBoxFlat_a4d87")
+
+[node name="3Dplayer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0dfp3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="VBoxContainer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="3dEnv" parent="VBoxContainer/SubViewportContainer/SubViewport" instance=ExtResource("1_l8nqv")]
+unique_name_in_owner = true
+
+[node name="Camera3D" parent="VBoxContainer/SubViewportContainer/SubViewport/3dEnv" index="3"]
+transform = Transform3D(1, 0, 0, 0, 0.979537, 0.201266, 0, -0.201266, 0.979537, 0, 3.628, 10)
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Panel" type="Panel" parent="Control"]
+visible = false
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_din31")
+
+[node name="animation controls" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/animation controls"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="to_start" type="Button" parent="Control/animation controls/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="play" type="Button" parent="Control/animation controls/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+
+[node name="to_end" type="Button" parent="Control/animation controls/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="time" type="Label" parent="Control/animation controls/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "sdfsfsfsdfs"
+
+[node name="timebar" type="HBoxContainer" parent="Control/animation controls"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.55
+
+[node name="spacer" type="Control" parent="Control/animation controls/timebar"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="timebar" type="HSlider" parent="Control/animation controls/timebar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.0
+
+[node name="maxtime" type="Label" parent="Control/animation controls/timebar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "sdfsfsfsdfs"
+
+[node name="spacer2" type="Control" parent="Control/animation controls/timebar"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="Control/animation controls/timebar/spacer2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="live_indicator" type="Panel" parent="Control/animation controls/timebar/spacer2/CenterContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+theme = SubResource("Theme_332a8")
+
+[node name="Control2" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="theta_label" type="Label" parent="Control2/HBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0.169245, 0.169245, 0.169245, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "asd"
+horizontal_alignment = 1
+
+[node name="theta_dot_label" type="Label" parent="Control2/HBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0.169245, 0.169245, 0.169245, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ad"
+horizontal_alignment = 1
+
+[node name="x_label" type="Label" parent="Control2/HBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0.169245, 0.169245, 0.169245, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="x_dot_label" type="Label" parent="Control2/HBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0.169245, 0.169245, 0.169245, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Control/animation controls/HBoxContainer/to_start" to="." method="_on_to_start_pressed"]
+[connection signal="toggled" from="Control/animation controls/HBoxContainer/play" to="." method="set_playing"]
+[connection signal="pressed" from="Control/animation controls/HBoxContainer/to_end" to="." method="_on_to_end_pressed"]
+[connection signal="value_changed" from="Control/animation controls/timebar/timebar" to="." method="_on_timebar_value_changed"]
+
+[editable path="VBoxContainer/SubViewportContainer/SubViewport/3dEnv"]

@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://dfrfbcfldlojm"]
+
+[node name="pid_editor" type="Window"]
+mode = 2
+title = "PID parameters editor"
+initial_position = 1
+size = Vector2i(340, 250)
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="edit" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/edit"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+text = "P:"
+horizontal_alignment = 2
+
+[node name="p_slider" type="HSlider" parent="Panel/VBoxContainer/edit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -10.0
+max_value = 10.0
+step = 0.0
+
+[node name="edit2" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/edit2"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+text = "I:"
+horizontal_alignment = 2
+
+[node name="i_slider" type="HSlider" parent="Panel/VBoxContainer/edit2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -10.0
+max_value = 10.0
+step = 0.0
+
+[node name="edit3" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/edit3"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+text = "D:"
+horizontal_alignment = 2
+
+[node name="d_slider" type="HSlider" parent="Panel/VBoxContainer/edit3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = -10.0
+max_value = 10.0
+step = 0.0
+
+[connection signal="close_requested" from="." to="." method="hide"]
