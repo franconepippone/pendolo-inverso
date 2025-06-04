@@ -5,7 +5,7 @@ extends Node
 @onready var controller = get_node("%controller")
 
 
-var SUBSTEPS: int = 10
+var SUBSTEPS: int = 1
 var TIMESTEP: float = 0.01
 var elapsed_time: float = 0.0
 var time_limit: float = 100000

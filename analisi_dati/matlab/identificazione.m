@@ -9,11 +9,13 @@ format longG
 data1 = readtable("fixed_reading/PID-lenti-tracking-target.csv", "CommentStyle", "#"); % La regressione lineare non funziona
 % usa ident
 
-data2 = readtable("simulazioni/nonlin_normalnoise1.csv", "CommentStyle", "#"); 
+data2 = readtable("simulazioni/old/nonlin_normalnoise1.csv", "CommentStyle", "#"); 
 
-data3 = readtable("recuperati/bassi_autovalori_con_target.csv", "CommentStyle", "#"); 
+data3 = readtable("recuperati/bassi_autovalori_con_target.csv", "CommentStyle", "#");
 
-data = data3;
+data4 = readtable("simulazioni/new/data2.csv", "CommentStyle", "#");
+
+data = data4;
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 INPUTS = data.input;
@@ -85,7 +87,7 @@ TIMESTEP = 0.01;
 
 sys = ss(A, B, eye(4), 0, TIMESTEP);
 
-ITER_START = 500;
+ITER_START = 100;
 U = INPUTS(ITER_START:end);
 t = (ITER_START:N) * 0.01;
 
@@ -96,11 +98,14 @@ x0 = STATES(ITER_START, :); % estrae lo stato a quell'iterazione
 y = lsim(sys, U, t, x0);
 
 figure()
+title("Stato del sistema simulato");
+title("Stato del sistema simulato");
 plot(t, [U y]);
 ylim([-23, 23]);
 legend({'input', 'theta', "theta'", 'position', 'velocity'}); 
 
 figure()
+title("Stato del sistema misurato")
 plot(t, [U STATES(ITER_START:end, :)]);
 ylim([-23, 23]);
 legend({'input','theta', "theta'", 'position', 'velocity'});
@@ -119,11 +124,11 @@ K = acker(A, B, poles);
 disp('Pole placement Gain K:')
 disp(K);
 
-Q = [1 0 0 0; 
-    0 0 0 0; 
-    0 0 1 0; 
-    0 0 0 0];       % State cost matrix
-R = .1;              % Control cost matrix
+Q = [100 0 0 0; 
+    0 10 0 0; 
+    0 0 100 0; 
+    0 0 0 10];       % State cost matrix
+R = .01;              % Control cost matrix
 
 % Compute the optimal gain K using discrete LQR
 [K, P, E] = dlqr(A, B, Q, R);

@@ -11,7 +11,8 @@ STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 
 TIMESTEP = 10^-2 % 10ms
 
-old_timestamps_s = data.timestamp / 1000; % li trasforma in secondi
+%old_timestamps_s = data.timestamp / 1000; % li trasforma in secondi
+old_timestamps_s = 0:TIMESTEP:length(data.theta);
 
 % nuovi timestamps
 new_timestamps = min(old_timestamps_s):TIMESTEP:max(old_timestamps_s); 

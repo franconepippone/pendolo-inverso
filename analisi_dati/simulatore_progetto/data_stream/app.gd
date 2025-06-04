@@ -31,7 +31,8 @@ func _on_d_slider_value_changed(value: float) -> void:
 func _on_new_sim_pressed() -> void:
 	var initials = PendState.new(1, -1, 2, 2)
 	print(initials.x)
-	var stream: DataStream = simulator.start_sim(PendState.new(.01, .1, 0, 0), 0)
+	#PendState.new(-0.04, .15, -4.5, 0)
+	var stream: DataStream = simulator.start_sim(PendState.new(-0.04, .15, 0, 0), 0)
 	player3d.set_motion_source(stream)
 	player3d.set_playing(true)
 

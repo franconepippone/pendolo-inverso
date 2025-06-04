@@ -4,10 +4,10 @@ extends Node
 @export_node_path("Node") var _model
 @onready var model = get_node(_model)
 
-var is_active: bool = true
+var is_active: bool = false
 
 
-var mode: int = 1
+var mode: int = 0
 
 @onready var rng = RandomNumberGenerator.new()
 
@@ -37,7 +37,8 @@ var readings: Array = []
 #var K = [6.3563479402859, 2.5075415869239, -0.630460255739673, 0.596306350969665] # NON VA
 
 
-var K = [111.6441, 104.132, -2.544443, -6.731056]
+#var K = [111.6441, 104.132, -2.544443, -6.731056]
+var K = [9917.5735, 853.96744, -75.147199, -41.810653]
 
 func _ready() -> void:
 	rng.randomize()
@@ -77,7 +78,7 @@ func PID(dt):
 	#err_last = err
 	#err_int += err * model.dt
 	#var r = err * p + err_der * d + err_int * i
-	smooth_target_x += (target_x - smooth_target_x) * .1
+	
 	smooth_model_x += (model.x - smooth_model_x) * .1
 	var err2 = (smooth_target_x - smooth_model_x)
 	var err_der2 = (err2-err_last2)/dt
@@ -105,12 +106,13 @@ func PID(dt):
 		last_u *= .9
 	
 func SF():
-	u = -dot(K, [model.theta, model.theta_prime, model.x - target_x, model.v])
+	u = -dot(K, [model.theta, model.theta_prime, model.x - smooth_target_x, model.v])
 	
-	u = clamp(u, -40, 40)
+	u = clamp(u, -40000, 40000)
 	
 	model.apply_input(u)
-
+	print(u)
+	
 func set_mode(new_mode: int):
 	err_int = 0
 	mode = new_mode
@@ -135,6 +137,7 @@ func control(dt):
 	if not is_active:
 		return
 	
+	smooth_target_x += (target_x - smooth_target_x) * .1
 	if mode == 0:
 		SF()
 	elif mode == 1:
