@@ -8,14 +8,14 @@ extends Node
 var v_prev: float = 0
 
 # constants
-@export var g: float = 9.81
-@export var l: float = .10
+@export var g: float = 981
+@export var l: float = 10
 
 var force: float = 0
 var acc: float = 0
 
-var angular_damp = .99
-var linear_damp = .99
+var angular_friction = 1
+var linear_friction = .01
 
 func sqr(x: float) -> float:
 	return x * x
@@ -40,6 +40,10 @@ func set_vel(v_t: float, lerp: float = .1):
 	v_prev = v
 	v += (v_t - v) * lerp
 
+func apply_input(magnitude: float):
+	apply_acc(magnitude)
+	set_force(magnitude)
+
 func apply_acc(a: float):
 	acc = a
 
@@ -50,13 +54,14 @@ func locked_cart(dt: float):
 	
 	# numerical integration
 	theta_prime += theta_dd * dt 
-	theta_prime *= angular_damp
+	theta_prime -= theta_prime * angular_friction * dt
 	
 	v_prev = v
 	v += acc * dt;
 	if abs(acc) > 0:
-		acc = 0
-	v *= linear_damp
+		pass
+		#acc = 0
+	v -= v * linear_friction * dt
 	x += v * dt
 	theta += theta_prime * dt
 
@@ -64,9 +69,11 @@ func free_cart(dt):
 	#calculating accelerations
 	var theta_dd: float
 	var x_dd: float
+	var m: float = 1
+	var M: float = 1
 	
-	#x_dd = (m * g * sin(theta) * cos(theta) - m * l * sqr(theta_prime) * sin(theta) + force) / (M + m*(1.0 - sqr(cos(theta))))
-	#theta_dd = (x_dd * cos(theta) + g * sin(theta)) / l
+	x_dd = (m * g * sin(theta) * cos(theta) - m * l * sqr(theta_prime) * sin(theta) + force) / (M + m*(1.0 - sqr(cos(theta))))
+	theta_dd = (x_dd * cos(theta) + g * sin(theta)) / l
 	
 	#theta_dd = (force + m*l*sqr(theta_prime)*sin(theta) + g*sin(theta)/cos(theta)) / ((M+m)*(I+m*sqr(l)) / -(m*l*cos(theta)) + m*l*cos(theta))
 	#x_dd = (theta_dd * (I + m*l*l) + m*g*l*sin(theta)) / (-m*l*cos(theta))
@@ -75,14 +82,14 @@ func free_cart(dt):
 	#x_dd = -l*cos(theta)*theta_dd + l*sqr(theta_prime)*sin(theta)
 		
 	# numerical integration
-	#v += x_dd * dt
-	##theta_prime += theta_dd * dt 
+	v += x_dd * dt
+	theta_prime += theta_dd * dt 
 	###v *= linear_damp
 	#theta_prime *= angular_damp
 	
-	#x += v * dt
-	#theta += theta_prime * dt
+	x += v * dt
+	theta += theta_prime * dt
 	
 # advances one step in the simulation
 func advance(dt):
-	locked_cart(dt)
+	free_cart(dt)

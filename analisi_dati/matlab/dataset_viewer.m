@@ -5,7 +5,7 @@ format long
 
 %% Data viewer and editor
 
-data = readtable("fixed_reading/PID-lenti-tracking-target.csv", "CommentStyle", "#");
+data = readtable("simulazioni/nonlinear_pid_2.csv", "CommentStyle", "#");
 
 STATES = [data.theta, data.theta_dot, data.pos, data.vel];
 

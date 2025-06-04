@@ -21,6 +21,7 @@ func _process(delta):
 	var norm_mouse = mouse_pos / viewport_size
 	
 	var fac = 1920 / viewport_size.x
-	virtual_target = (norm_mouse.x - 0.5) * 18 / fac
+	virtual_target = (norm_mouse.x - 0.5) * 18 / fac * 1.8
 	
 	controller_target_x += (virtual_target - controller_target_x) * .1
+	controller_target_x = virtual_target

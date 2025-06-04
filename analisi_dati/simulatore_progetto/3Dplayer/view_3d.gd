@@ -46,6 +46,8 @@ func _process(delta: float) -> void:
 
 func _show_frame_at(time: float):
 	var frame: DataStream.DataFrame = datastream.get_at(time)
+	if frame == null:
+		return
 	var state: PendState = frame.payload
 	
 	env3d.pendvar_set_theta(state.theta)

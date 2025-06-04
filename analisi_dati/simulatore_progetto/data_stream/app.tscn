@@ -23,7 +23,7 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 script = ExtResource("4_txdh2")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="main_container" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,12 +31,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="main_appbar" type="Panel" parent="VBoxContainer"]
+[node name="main_appbar" type="Panel" parent="main_container"]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.07
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/main_appbar"]
+[node name="HBoxContainer" type="HBoxContainer" parent="main_container/main_appbar"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,70 +45,68 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="Button5" type="Button" parent="VBoxContainer/main_appbar/HBoxContainer"]
+[node name="load_sim" type="Button" parent="main_container/main_appbar/HBoxContainer"]
 layout_mode = 2
 toggle_mode = true
 text = "Load simulation
 "
 
-[node name="Control2" type="Control" parent="VBoxContainer/main_appbar/HBoxContainer"]
+[node name="save_sim" type="Button" parent="main_container/main_appbar/HBoxContainer"]
 layout_mode = 2
-
-[node name="Button3" type="Button" parent="VBoxContainer/main_appbar/HBoxContainer"]
-visible = false
-layout_mode = 2
-text = "save data as csv
+toggle_mode = true
+text = "Save simulation
 "
 
-[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/main_appbar/HBoxContainer"]
-visible = false
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/main_appbar/HBoxContainer/CenterContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/main_appbar/HBoxContainer/CenterContainer/VBoxContainer"]
-layout_mode = 2
-text = "Enter filename:"
-
-[node name="TextEdit" type="TextEdit" parent="VBoxContainer/main_appbar/HBoxContainer/CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(550, 30)
-layout_mode = 2
-text = "G:\\OLD\\Dev\\repositories\\pendolo-inverso\\analisi_dati\\data.csv"
-placeholder_text = "enter file path/name"
-wrap_mode = 1
-scroll_fit_content_height = true
-caret_blink = true
-
-[node name="Control" type="Control" parent="VBoxContainer/main_appbar/HBoxContainer"]
-layout_mode = 2
-
-[node name="Button6" type="Button" parent="VBoxContainer/main_appbar/HBoxContainer"]
+[node name="new_sim" type="Button" parent="main_container/main_appbar/HBoxContainer"]
 layout_mode = 2
 toggle_mode = true
 text = "New simulation
 "
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Control" type="Control" parent="main_container/main_appbar/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="sim_settings" type="Button" parent="main_container/main_appbar/HBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "simulation settings"
+
+[node name="controller_settings" type="Button" parent="main_container/main_appbar/HBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Controller settings
+"
+
+[node name="channel_settings" type="Button" parent="main_container/main_appbar/HBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Channel settings
+"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="main_container"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="sim_list" parent="VBoxContainer/HBoxContainer" instance=ExtResource("4_3o47o")]
+[node name="sim_list" parent="main_container/HBoxContainer" instance=ExtResource("4_3o47o")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_stretch_ratio = 0.25
 
-[node name="3Dplayer" parent="VBoxContainer/HBoxContainer" instance=ExtResource("4_ix51n")]
+[node name="3Dplayer" parent="main_container/HBoxContainer" instance=ExtResource("4_ix51n")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="pid_editor" parent="." instance=ExtResource("6_vpmrl")]
+visible = false
 
-[connection signal="toggled" from="VBoxContainer/main_appbar/HBoxContainer/Button5" to="." method="_on_load_sim_toggled"]
-[connection signal="toggled" from="VBoxContainer/main_appbar/HBoxContainer/Button6" to="." method="_on_load_sim_toggled"]
-[connection signal="request_new_frame" from="VBoxContainer/HBoxContainer/3Dplayer" to="." method="_on_dplayer_request_new_frame"]
+[connection signal="toggled" from="main_container/main_appbar/HBoxContainer/load_sim" to="." method="_on_load_sim_toggled"]
+[connection signal="pressed" from="main_container/main_appbar/HBoxContainer/save_sim" to="." method="_on_save_sim_pressed"]
+[connection signal="pressed" from="main_container/main_appbar/HBoxContainer/new_sim" to="." method="_on_new_sim_pressed"]
+[connection signal="toggled" from="main_container/main_appbar/HBoxContainer/sim_settings" to="." method="_on_load_sim_toggled"]
+[connection signal="request_new_frame" from="main_container/HBoxContainer/3Dplayer" to="." method="_on_dplayer_request_new_frame"]
 [connection signal="value_changed" from="pid_editor/Panel/VBoxContainer/edit/p_slider" to="." method="_on_p_slider_value_changed"]
 [connection signal="value_changed" from="pid_editor/Panel/VBoxContainer/edit2/i_slider" to="." method="_on_i_slider_value_changed"]
 [connection signal="value_changed" from="pid_editor/Panel/VBoxContainer/edit3/d_slider" to="." method="_on_d_slider_value_changed"]

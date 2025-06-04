@@ -11,11 +11,6 @@ var mode: int = 1
 
 @onready var rng = RandomNumberGenerator.new()
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	print(model)
-	rng.randomize() 
-
 var target_x: float = 0
 var u: float = 0
 
@@ -44,12 +39,15 @@ var readings: Array = []
 
 var K = [111.6441, 104.132, -2.544443, -6.731056]
 
-func _enter_tree():
-	Utils.write_csv_file("readings/ciccio.csv", ["input", "theta", "theta_dot", "pos", "vel"])
-	pass
+func _ready() -> void:
+	rng.randomize()
+	#Utils.write_csv_file("readings/ciccio.csv", ["input", "theta", "theta_dot", "pos", "vel"])
+	PID1 = PIDParams.new(-10000, 0, -300)
+	PID2 = PIDParams.new(-50, 0, -30)
+	
 # pid
-
-var PID1: PIDParams = PIDParams.new(-100, -5, -30)
+#PIDParams.new(-100, -5, -30)
+var PID1: PIDParams = PIDParams.new(-0, 0,0)
 var err_last = 0
 var err_int = 0
 
@@ -65,6 +63,10 @@ func dot(arr1: Array, arr2: Array) -> float:
 		sm += arr1[i] * arr2[i]
 	return sm
 
+var smooth_model_x: float = 0
+var smooth_target_x: float = 0
+var last_u: float = 0
+
 func PID(dt):
 	
 	# sistema interno
@@ -75,7 +77,9 @@ func PID(dt):
 	#err_last = err
 	#err_int += err * model.dt
 	#var r = err * p + err_der * d + err_int * i
-	var err2 = (target_x - model.x)
+	smooth_target_x += (target_x - smooth_target_x) * .1
+	smooth_model_x += (model.x - smooth_model_x) * .1
+	var err2 = (smooth_target_x - smooth_model_x)
 	var err_der2 = (err2-err_last2)/dt
 	err_last2 = err2
 	err_int2 += err2 * dt
@@ -90,16 +94,22 @@ func PID(dt):
 	
 	#var acc = (K1 * (model.theta + .1) + K2 * model.theta_prime)
 	u = r + w
+	u = clamp(u, -10000, 10000)
+	const p =1
+	var pack_arrived: bool = randf() < p
+	if pack_arrived:
+		model.apply_input(u)
+		last_u = u
+	else:
+		model.apply_input(last_u)
+		last_u *= .9
 	
-	u = clamp(u, -10, 10)
-	model.apply_acc(u)
-
 func SF():
 	u = -dot(K, [model.theta, model.theta_prime, model.x - target_x, model.v])
 	
 	u = clamp(u, -40, 40)
 	
-	model.apply_acc(u)
+	model.apply_input(u)
 
 func set_mode(new_mode: int):
 	err_int = 0
@@ -116,9 +126,12 @@ func reset():
 	err_int = 0
 	err_last2 = 0
 	err_int2 = 0
+	smooth_model_x = 0
+	last_u = 0
 
 
 func control(dt):
+	
 	if not is_active:
 		return
 	
@@ -129,9 +142,9 @@ func control(dt):
 
 	
 	var new_line = [u, 
-		model.theta + rng.randfn(0, 0.01),
-		model.theta_prime + rng.randfn(0, 0.01),
-		model.x + rng.randfn(0, 0.05),
-		model.v + rng.randfn(0, 0.05)
+		model.theta + rng.randfn(0, 0.00),
+		model.theta_prime + rng.randfn(0, 0.00),
+		model.x + rng.randfn(0, 0.00),
+		model.v + rng.randfn(0, 0.00)
 	]
 	readings.append(new_line)

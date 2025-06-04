@@ -5,7 +5,7 @@ extends Node
 @onready var controller = get_node("%controller")
 
 
-var SUBSTEPS: int = 1
+var SUBSTEPS: int = 10
 var TIMESTEP: float = 0.01
 var elapsed_time: float = 0.0
 var time_limit: float = 100000
@@ -19,6 +19,7 @@ func start_sim(initial_cond: PendState = PendState.new(), time_limit: float = 10
 	elapsed_time = 0
 	self.time_limit = time_limit
 	plant.set_state(initial_cond.theta, initial_cond.theta_dot, initial_cond.x, initial_cond.x_dot)
+	controller.reset()
 	print("simulation started")
 	return current_data_stream
 
@@ -34,7 +35,7 @@ func step_sim():
 	# updates datastream
 	var current_state: PendState = plant.get_state()
 	current_state.u = controller.u
-	current_state.target = controller.target_x
+	current_state.target = controller.smooth_target_x
 	current_data_stream.put(elapsed_time, current_state)
 
 func get_pid1_params() -> PIDParams:

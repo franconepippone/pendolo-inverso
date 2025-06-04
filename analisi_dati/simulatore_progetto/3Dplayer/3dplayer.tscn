@@ -45,15 +45,12 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="VBoxContainer/SubViewportContainer"]
 handle_input_locally = false
-size = Vector2i(1920, 1080)
+size = Vector2i(2, 2)
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
 [node name="3dEnv" parent="VBoxContainer/SubViewportContainer/SubViewport" instance=ExtResource("1_l8nqv")]
 unique_name_in_owner = true
-
-[node name="Camera3D" parent="VBoxContainer/SubViewportContainer/SubViewport/3dEnv" index="3"]
-transform = Transform3D(1, 0, 0, 0, 0.979537, 0.201266, 0, -0.201266, 0.979537, 0, 3.628, 10)
 
 [node name="Control" type="Control" parent="."]
 custom_minimum_size = Vector2(0, 100)

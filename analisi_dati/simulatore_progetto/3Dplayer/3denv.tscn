@@ -90,7 +90,7 @@ source = NodePath("../..")
 var_name = "u"
 color = Color(0.67451, 0.0313726, 0.811765, 1)
 max_val = 0.0
-lenght_multiplier = -1.0
+lenght_multiplier = -0.01
 
 [node name="arrow2" parent="cart" instance=ExtResource("5_q1aal")]
 transform = Transform3D(1.31134e-07, 1, 0, -1, 1.31134e-07, 0, 0, 0, 1, 0.962883, 0.198486, 0.231638)
@@ -98,12 +98,14 @@ source = NodePath("../..")
 var_name = "u"
 color = Color(0.67451, 0.0313726, 0.811765, 1)
 min_val = 0.0
+lenght_multiplier = 0.01
 
 [node name="velocity" parent="cart" instance=ExtResource("5_q1aal")]
 transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, -0.958871, 0)
 source = NodePath("../..")
 var_name = "x_dot"
 color = Color(0.811765, 0.270588, 0.105882, 1)
+lenght_multiplier = 0.1
 
 [node name="angle" parent="cart" instance=ExtResource("5_q1aal")]
 transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 5.0253, 0)
