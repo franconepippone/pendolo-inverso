@@ -3,7 +3,7 @@
 [node name="pid_editor" type="Window"]
 mode = 2
 title = "PID parameters editor"
-initial_position = 1
+initial_position = 4
 size = Vector2i(340, 250)
 
 [node name="Panel" type="Panel" parent="."]

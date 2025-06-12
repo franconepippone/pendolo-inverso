@@ -32,10 +32,17 @@ func _on_new_sim_pressed() -> void:
 	var initials = PendState.new(1, -1, 2, 2)
 	print(initials.x)
 	#PendState.new(-0.04, .15, -4.5, 0)
-	var stream: DataStream = simulator.start_sim(PendState.new(-0.04, .15, 0, 0), 0)
+	var stream: DataStream = simulator.start_sim(PendState.new(0, .2, 0, 0), 0)
 	player3d.set_motion_source(stream)
 	player3d.set_playing(true)
 
 
 func _on_save_sim_pressed() -> void:
-	simulator.controller.save_data("C:/Users/ameri/Documents/uni/data.csv")
+	DialogManager.show_dialog("save_sim")
+	
+	#simulator.controller.save_data("C:/Users/ameri/Documents/uni/data.csv")
+
+func _on_save_sim_save(title: String, description: String) -> void:
+	var data: DataStream = simulator.get_current_data_stream()
+	var runned_sim = RunnedSimulation.new(data, title, description)
+	SimManager.add_simulation(runned_sim)

@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://mrrddvdvxcmt"]
+[gd_scene load_steps=8 format=3 uid="uid://mrrddvdvxcmt"]
 
 [ext_resource type="Script" uid="uid://tgyocmnddbo5" path="res://data_stream/app.gd" id="1_g1v5p"]
 [ext_resource type="PackedScene" uid="uid://beufu5xhumttd" path="res://simulator/simulator.tscn" id="2_txdh2"]
 [ext_resource type="PackedScene" uid="uid://bqjl35jbbw1eg" path="res://ui/sim_list.tscn" id="4_3o47o"]
 [ext_resource type="PackedScene" uid="uid://yeyusrjeigw0" path="res://3Dplayer/3dplayer.tscn" id="4_ix51n"]
 [ext_resource type="Script" uid="uid://ctni608swqmof" path="res://simulator/InputHandler.gd" id="4_txdh2"]
-[ext_resource type="PackedScene" uid="uid://dfrfbcfldlojm" path="res://ui/pid_editor.tscn" id="6_vpmrl"]
+[ext_resource type="PackedScene" uid="uid://dfrfbcfldlojm" path="res://ui/dialogs/pid_editor.tscn" id="6_vpmrl"]
+[ext_resource type="PackedScene" uid="uid://dy7d1h3dmiptg" path="res://ui/dialogs/save_sim_dialog.tscn" id="7_ix51n"]
 
 [node name="app" type="Control"]
 layout_mode = 3
@@ -99,7 +100,20 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="pid_editor" parent="." instance=ExtResource("6_vpmrl")]
+[node name="dialogs_container" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="pid_editor" parent="dialogs_container" instance=ExtResource("6_vpmrl")]
+
+[node name="save_sim" parent="dialogs_container" instance=ExtResource("7_ix51n")]
+initial_position = 4
 visible = false
 
 [connection signal="toggled" from="main_container/main_appbar/HBoxContainer/load_sim" to="." method="_on_load_sim_toggled"]
@@ -107,8 +121,9 @@ visible = false
 [connection signal="pressed" from="main_container/main_appbar/HBoxContainer/new_sim" to="." method="_on_new_sim_pressed"]
 [connection signal="toggled" from="main_container/main_appbar/HBoxContainer/sim_settings" to="." method="_on_load_sim_toggled"]
 [connection signal="request_new_frame" from="main_container/HBoxContainer/3Dplayer" to="." method="_on_dplayer_request_new_frame"]
-[connection signal="value_changed" from="pid_editor/Panel/VBoxContainer/edit/p_slider" to="." method="_on_p_slider_value_changed"]
-[connection signal="value_changed" from="pid_editor/Panel/VBoxContainer/edit2/i_slider" to="." method="_on_i_slider_value_changed"]
-[connection signal="value_changed" from="pid_editor/Panel/VBoxContainer/edit3/d_slider" to="." method="_on_d_slider_value_changed"]
+[connection signal="value_changed" from="dialogs_container/pid_editor/Panel/VBoxContainer/edit/p_slider" to="." method="_on_p_slider_value_changed"]
+[connection signal="value_changed" from="dialogs_container/pid_editor/Panel/VBoxContainer/edit2/i_slider" to="." method="_on_i_slider_value_changed"]
+[connection signal="value_changed" from="dialogs_container/pid_editor/Panel/VBoxContainer/edit3/d_slider" to="." method="_on_d_slider_value_changed"]
+[connection signal="save" from="dialogs_container/save_sim" to="." method="_on_save_sim_save"]
 
-[editable path="pid_editor"]
+[editable path="dialogs_container/pid_editor"]

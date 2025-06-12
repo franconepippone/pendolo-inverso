@@ -32,6 +32,7 @@ func pendvar_set_target(target: float):
 
 func _process(delta: float) -> void:
 	cart.position.x = x
-	pendulum.rotation.z = theta
+	pendulum.rotation.z = -theta
 	target_model.position.x = target
+	%Camera3D.position.x = lerp(%Camera3D.position.x, x, 0.0)
 	

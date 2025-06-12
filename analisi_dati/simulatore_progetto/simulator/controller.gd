@@ -4,10 +4,13 @@ extends Node
 @export_node_path("Node") var _model
 @onready var model = get_node(_model)
 
-var is_active: bool = false
+enum ControllerType {
+	PID,
+	SF,
+	NONE
+}
 
-
-var mode: int = 0
+var mode: ControllerType = ControllerType.PID
 
 @onready var rng = RandomNumberGenerator.new()
 
@@ -43,16 +46,16 @@ var K = [9917.5735, 853.96744, -75.147199, -41.810653]
 func _ready() -> void:
 	rng.randomize()
 	#Utils.write_csv_file("readings/ciccio.csv", ["input", "theta", "theta_dot", "pos", "vel"])
-	PID1 = PIDParams.new(-10000, 0, -300)
-	PID2 = PIDParams.new(-50, 0, -30)
+	#PID1 = PIDParams.new(-10000, 0, -300)
+	#PID2 = PIDParams.new(-50, 0, -30)
 	
 # pid
 #PIDParams.new(-100, -5, -30)
-var PID1: PIDParams = PIDParams.new(-0, 0,0)
+var PID1: PIDParams = PIDParams.new(100000, 0,0)
 var err_last = 0
 var err_int = 0
 
-var PID2: PIDParams = PIDParams.new(-1, 0, -2.2)
+var PID2: PIDParams = PIDParams.new(-0, 0, -0)
 var err_last2 = 0
 var err_int2 = 0
 
@@ -131,23 +134,19 @@ func reset():
 	smooth_model_x = 0
 	last_u = 0
 
-
 func control(dt):
 	
-	if not is_active:
-		return
-	
 	smooth_target_x += (target_x - smooth_target_x) * .1
-	if mode == 0:
-		SF()
-	elif mode == 1:
-		PID(dt)
+	match mode:
+		ControllerType.SF: SF()
+		ControllerType.PID: PID(dt)
+		_: return
 
 	
 	var new_line = [u, 
 		model.theta + rng.randfn(0, 0.00),
-		model.theta_prime + rng.randfn(0, 0.00),
+		model.theta_d + rng.randfn(0, 0.00),
 		model.x + rng.randfn(0, 0.00),
-		model.v + rng.randfn(0, 0.00)
+		model.x_d + rng.randfn(0, 0.00)
 	]
 	readings.append(new_line)

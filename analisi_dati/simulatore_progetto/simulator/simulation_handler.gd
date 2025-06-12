@@ -47,6 +47,9 @@ func get_pid2_params() -> PIDParams:
 func set_target_x(target_x: float):
 	controller.target_x = target_x
 
+func get_current_data_stream() -> DataStream:
+	return current_data_stream
+
 func _process(_delta: float) -> void:
 	if simulating:
 		if elapsed_time < time_limit:

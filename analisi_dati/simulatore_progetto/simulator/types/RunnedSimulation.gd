@@ -10,4 +10,4 @@ func _init(sysdata, title = "default simulation title", description = "") -> voi
 	self.title = title
 	self.description = description
 	self.sysdata = sysdata
-	self.data = Time.get_datetime_dict_from_system()
+	self.date = Time.get_datetime_dict_from_system()

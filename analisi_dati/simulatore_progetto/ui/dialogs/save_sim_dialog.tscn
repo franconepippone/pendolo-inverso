@@ -1,0 +1,106 @@
+[gd_scene load_steps=2 format=3 uid="uid://dy7d1h3dmiptg"]
+
+[ext_resource type="Script" uid="uid://dgdj20veutx64" path="res://ui/dialogs/save_sim_dialog.gd" id="1_aqgg2"]
+
+[node name="save_sim" type="Window"]
+mode = 2
+title = "Save simulation"
+initial_position = 1
+size = Vector2i(400, 300)
+script = ExtResource("1_aqgg2")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="edit" type="HBoxContainer" parent="Panel/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/ScrollContainer/VBoxContainer/edit"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Title: "
+horizontal_alignment = 2
+
+[node name="titleedit" type="LineEdit" parent="Panel/VBoxContainer/ScrollContainer/VBoxContainer/edit"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+placeholder_text = "my simulation name"
+
+[node name="edit2" type="HBoxContainer" parent="Panel/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/ScrollContainer/VBoxContainer/edit2"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Date:"
+horizontal_alignment = 2
+
+[node name="TextEdit" type="LineEdit" parent="Panel/VBoxContainer/ScrollContainer/VBoxContainer/edit2"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="edit3" type="VBoxContainer" parent="Panel/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/ScrollContainer/VBoxContainer/edit3"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Notes:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="descriptionedit" type="TextEdit" parent="Panel/VBoxContainer/ScrollContainer/VBoxContainer/edit3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "Notes about this simulation"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="cancel" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="exp_csv" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Export csv"
+
+[node name="save" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Save"
+
+[connection signal="close_requested" from="." to="." method="hide"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer/cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer/exp_csv" to="." method="_on_exp_csv_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer/save" to="." method="_on_save_pressed"]

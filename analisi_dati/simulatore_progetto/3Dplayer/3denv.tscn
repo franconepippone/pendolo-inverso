@@ -108,13 +108,14 @@ color = Color(0.811765, 0.270588, 0.105882, 1)
 lenght_multiplier = 0.1
 
 [node name="angle" parent="cart" instance=ExtResource("5_q1aal")]
-transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 5.0253, 0)
+transform = Transform3D(4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0, 5.0253, 0)
 source = NodePath("../..")
 var_name = "theta"
 color = Color(0.0117647, 0.905882, 0.0313726, 1)
 lenght_multiplier = -30.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.979537, 0.201266, 0, -0.201266, 0.979537, 0, 3.628, 10)
 current = true
 fov = 52.2
