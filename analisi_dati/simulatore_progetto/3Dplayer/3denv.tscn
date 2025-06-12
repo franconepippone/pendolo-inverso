@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://dipjdf0hrdwnu"]
 
 [ext_resource type="Script" uid="uid://c86n6p7v6pr08" path="res://3Dplayer/cart_display.gd" id="4_6kmgc"]
-[ext_resource type="PackedScene" uid="uid://b6bfrpaukp6y1" path="res://utils/arrow.tscn" id="5_q1aal"]
+[ext_resource type="PackedScene" uid="uid://b6bfrpaukp6y1" path="res://ui/utils/arrow.tscn" id="5_q1aal"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_oovpc"]
 sky_top_color = Color(0.984314, 0.984314, 0.984314, 1)

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://digpdhdemtlyi"]
 
 [ext_resource type="Script" uid="uid://te0oxa8cogxc" path="res://addons/graph_2d/graph_2d.gd" id="1_mm831"]
-[ext_resource type="Script" uid="uid://bej1ymknpkeu2" path="res://utils/real_time_variable_plot.gd" id="1_wn05e"]
+[ext_resource type="Script" uid="uid://bej1ymknpkeu2" path="res://ui/utils/real_time_variable_plot.gd" id="1_wn05e"]
 
 [node name="real_time_variable_plot" type="Control"]
 layout_mode = 3

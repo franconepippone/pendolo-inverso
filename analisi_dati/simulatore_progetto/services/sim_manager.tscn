@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://ko1g6l0pik0m"]
+
+[node name="sim_manager" type="Node"]

@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://beufu5xhumttd"]
 
 [ext_resource type="Script" uid="uid://cpomhsjb358eo" path="res://simulator/simulation_handler.gd" id="1_ydvv7"]
-[ext_resource type="Script" uid="uid://dqt2s406q6h2d" path="res://simulator/plant_physics.gd" id="2_o5auv"]
-[ext_resource type="Script" uid="uid://msl3jlm201hd" path="res://simulator/controller.gd" id="3_0wa8t"]
+[ext_resource type="Script" uid="uid://dqt2s406q6h2d" path="res://simulator/Plant.gd" id="2_o5auv"]
+[ext_resource type="Script" uid="uid://msl3jlm201hd" path="res://simulator/Controller.gd" id="3_0wa8t"]
 
 [node name="simulator" type="Node"]
 script = ExtResource("1_ydvv7")
