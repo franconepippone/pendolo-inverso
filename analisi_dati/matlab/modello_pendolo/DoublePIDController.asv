@@ -1,0 +1,47 @@
+classdef DoublePIDController < handle
+    % PIDController with discrete-time update (zero-order hold)
+    
+    properties
+        pid1       % angle pid
+        pid2      % cart pid
+
+        uMin     % min output
+        uMax     % max output
+           
+        % logging of inputs
+        execTimes = [];
+        u = [];
+    end
+    
+    methods
+        function obj = DoublePIDController(pid1, pid2, uMin, uMax)
+            % binds the two internal pid controllers
+            obj.pid1 = pid1;
+            obj.pid2 = pid2;
+            if nargin>=3
+                obj.uMin = uMin;  obj.uMax = uMax;
+            else
+                obj.uMin = -Inf;  obj.uMax = Inf;
+            end
+        end
+        
+        function u = step(obj, y, t)
+            % calls internal pids step functions
+            theta = y(3);
+            x = y(1);
+            u1 = obj.pid1.step(theta - pi, t);  % Step for angle PID
+            u2 = obj.pid2.step(x, t);  % Step for cart PID
+            uraw = u1 + u2;  % Combine outputs from both PID controllers
+            
+            % apply saturation
+            u = min(max(uraw, obj.uMin), obj.uMax);
+            obj.execTimes(end+1) = t;
+            obj.u()
+        end
+
+        function [t, u] = getInputPlot(obj)
+            u = obj.u;  % returns the output for logging
+            t = obj.execTimes;  % returns execution times for logging
+        end
+    end
+end

@@ -3,8 +3,8 @@ function dy = invpendulum(t, y, params)
     M       = params.M;          % cart mass
     m       = params.m;          % pendulum mass
     l       = params.l;          % pendulum length
-    b  = params.b;          % cart viscous friction
-    c = params.c;          % pivot viscous friction
+    b       = params.b;          % cart viscous friction
+    c       = params.c;          % pivot viscous friction
     g       = params.g;          % gravity
     
     % State variables
@@ -15,7 +15,10 @@ function dy = invpendulum(t, y, params)
     
     % Control and Cart Friction
     % you feed the controller the pendulum error (theta - pi) and time
-    F      = params.controller.step(theta - pi, t);
+    F      = params.controller.step(y, t);
+    if (abs(F) > 0)
+        display(F)
+    end
     Ffric  = -b * x_dot;      
     
     % Pivot Friction Torque
