@@ -13,15 +13,15 @@ grid on;
 xlabel('x (m)');
 ylabel('y (m)');
 %xlim([min(x)-params.l-0.5, max(x)+params.l+0.5]);
-xlim([-2, 2])
-ylim([-params.l-0.5, params.l+0.5]);
+xlim([-1, 1])
+ylim([-params.l-0.2, params.l+0.2]);
 
 % Draw ground line
 plot(xlim, [0 0], 'k', 'LineWidth', 1);
 
 % Initial cart rectangle
-cartW = 0.4;  % cart half‐width
-cartH = 0.2;  % cart half‐height
+cartW = 0.1;  % cart half‐width
+cartH = 0.05;  % cart half‐height
 cartY = -cartH;  % so top of cart is at y=0
 cartX = x(1) + [-cartW, +cartW, +cartW, -cartW, -cartW];
 cartYv= cartY + [0, 0, cartH*2, cartH*2, 0];
