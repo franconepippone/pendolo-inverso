@@ -12,13 +12,10 @@ function dy = invpendulum(t, y, params)
     x_dot  = y(2);
     theta  = y(3);
     th_dot = y(4);
-    
+
     % Control and Cart Friction
-    % you feed the controller the pendulum error (theta - pi) and time
-    F      = params.controller.step(y, t);
-    if (abs(F) > 0)
-        display(F)
-    end
+    % controller generates input force from state
+    F      = params.controller.step([x; x_dot; theta - pi; th_dot], t);
     Ffric  = -b * x_dot;      
     
     % Pivot Friction Torque

@@ -11,6 +11,9 @@ classdef DoublePIDController < handle
         % logging of inputs
         execTimes = [0];
         u = [0];
+
+        % x reference
+        RefFunc = @(t) 0; % for x = 0 tracking
     end
     
     methods
@@ -30,23 +33,27 @@ classdef DoublePIDController < handle
             x = y(1);
 
             % calls internal pids step functions
-            u1 = obj.pid1.step(theta - pi, t);  % Step for angle PID
-            u2 = obj.pid2.step(x, t);  % Step for cart PID
+            u1 = obj.pid1.step(theta, t);  % Step for angle PID
+            u2 = obj.pid2.step(obj.RefFunc(t) - x, t);  % Step for cart PID
             uraw = u1 + u2;  % Combine outputs from both PID controllers
             
             % apply saturation
             u = min(max(uraw, obj.uMin), obj.uMax);
 
             % stores results
-            if obj.execTimes(end) ~= t
+            if abs(obj.execTimes(end) - t) > 0.0001
                 obj.execTimes(end + 1) = t;
                 obj.u(end + 1) = u;
             end
         end
 
         function [t, u] = getInputPlot(obj)
-            u = obj.u;  % returns the output for logging
-            t = obj.execTimes;  % returns execution times for logging
+            [t_1, u_1] = obj.pid1.getInputPlot();
+            [~, u_2] = obj.pid1.getInputPlot();
+            
+            u = u_1 + u_2;
+            u = min(max(u, obj.uMin), obj.uMax);
+            t = t_1;
         end
     end
 end

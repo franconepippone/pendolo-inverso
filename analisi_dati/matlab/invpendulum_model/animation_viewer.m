@@ -1,11 +1,11 @@
-%--- PREPARE DATA ------------------------------------------------
+%% PREPARE DATA ------------------------------------------------
 % Suppose you've already solved and have:
 % t      : [N×1] time vector
 % x      : [N×1] cart positions
 % theta  : [N×1] pendulum angles (rad)
 % l      : pendulum length (scalar)
 
-%--- SET UP FIGURE ------------------------------------------------
+%% SET UP FIGURE ------------------------------------------------
 figure('Color','w');
 axis equal;
 hold on;
@@ -32,7 +32,7 @@ xp = x(1) + params.l*sin(theta(1));
 yp =            - params.l*cos(theta(1));
 hPend = plot([x(1), xp], [0, yp], 'r-', 'LineWidth', 2);
 
-%--- ANIMATION LOOP -----------------------------------------------
+%% ANIMATION LOOP -----------------------------------------------
 for k = 1:length(t)
     % Current state
     xc = x(k);
