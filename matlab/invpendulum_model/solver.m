@@ -5,28 +5,28 @@
 
 %% Create controller
 Ts = 0.005;            % controller loop time (200 Hz)
-Usat = 10000;
+Usat = 100;
 
 % PID
-ctrl1 = PIDController(1200, 0, 50, Ts);
-ctrl2 = PIDController(50, 0, 0, Ts);
-ctrl_pid = DoublePIDController(ctrl1, ctrl2, -Usat, Usat);
+ctrl1 = PIDController(1200, 0, 100);
+ctrl2 = PIDController(-500, 0, -300);
+ctrl_pid = MultiPIDController(ctrl1, ctrl2, Ts, -Usat, Usat);
 
 % SF
-K = [87.1048, -25.0638, 91.8837, 38.2115];
-K = [-500,-105, 1200,50]
-ctrl_sf = StateFeedbackController(K, Ts, -Usat, Usat);
+K = [-500,-300, 1200,100];
+ctrl_sf = SFController(K, Ts, -Usat, Usat);
 
 % chooses controller
 ctrl = ctrl_pid;
 
-% Generate smooth square wave reference signal
+% Generate smooth square wave reference signal of amplitude 1
 T = 5; % period
 k = 20;
-ctrl.RefFunc = @(t) .0 * (1 ./ (1 + exp(-k * (mod(t, T) - T/4))) - ...
+square_wave = @(t) (1 ./ (1 + exp(-k * (mod(t, T) - T/4))) - ...
                      1 ./ (1 + exp(-k * (mod(t, T) - 3*T/4))));
 
-
+% maps square wave to state variables
+ctrl.RefFunc = @(t) [.2; 0; 0; 0] * square_wave(t); 
 
 %% Setup simulation
 % Define parameters
@@ -60,16 +60,14 @@ th_dot = Y(:,4);
 
 % Extract input 
 [t_u, u] = ctrl.getInputPlot();
-% deletes odd columns (due to runga kutta integration, needs a better solution)
-% t_u(:, 2:2:end) = [];
-% u(:, 2:2:end) = [];
 
 %% Plot results
 figure;
 subplot(3,1,1);
-plot(t, x, 'LineWidth',1.5)
+y_ref = ctrl.RefFunc(t);
+plot(t, y_ref(1, :), 'LineWidth', 1.5, 'Color', 'red')
 hold on;
-plot(t, ctrl.RefFunc(t), 'LineWidth', 1.5, 'Color', 'red')
+plot(t, x, 'LineWidth',1.5, 'Color', 	[0.3010 0.7450 0.9330])
 xlabel('Time (s)'), ylabel('x (m)')
 title('Cart Position');
 

@@ -1,1 +1,4 @@
 /.vscode
+*.pyc
+/analisi_dati/__pycache__
+/hw_readings/py/__pycache__

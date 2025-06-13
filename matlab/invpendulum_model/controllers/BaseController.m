@@ -1,11 +1,11 @@
-classdef StateFeedbackController < handle
-    % PIDController with discrete-time update (zero-order hold)
+classdef (Abstract) BaseController < handle
+    % Abstract class for all controllers
     
     properties
-        K        % state gain matrix
-        Ts       % sample time (sec)
-        uMin     % min output
-        uMax     % max output
+        % saturation margins
+        uMin = -1000000    % min output
+        uMax = 1000000    % max output
+        Ts = 1       % update period
 
         % logging of inputs
         execTimes = [0];
@@ -14,13 +14,17 @@ classdef StateFeedbackController < handle
         % internal states
         prevU = 0       % last output value (zero-order hold)
         nextSampleT = 0  % next time at which to update
-
+        
         RefFunc = @(t) 0;
     end
     
+    methods (Abstract)
+        % this is the specific controller control law
+        u = control_law(obj, y_ref, y, t)
+    end
+
     methods
-        function obj = StateFeedbackController(K, Ts, uMin, uMax)
-            obj.K = K;
+        function obj = BaseController(Ts, uMin, uMax)
             obj.Ts = Ts;
             %prevExcTime = -Ts; % prevents initial dt to be zero
             if nargin>=2
@@ -32,14 +36,14 @@ classdef StateFeedbackController < handle
         
         function u = step(obj, y, t)
             % y is the state vector
+
             % Only update at t >= nextSampleT
             if t > obj.nextSampleT
-                % Compute error
+                % get reference
                 ref   = obj.RefFunc(t);
-                error = ref - y;
                 
-                % SF law
-                uraw = obj.K * error;
+                % law
+                uraw = obj.control_law(ref, y, t);
                 
                 % Saturate
                 uraw = min(max(uraw, obj.uMin), obj.uMax);
