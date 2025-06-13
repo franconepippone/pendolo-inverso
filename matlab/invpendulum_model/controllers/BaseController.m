@@ -38,7 +38,7 @@ classdef (Abstract) BaseController < handle
             % y is the state vector
 
             % Only update at t >= nextSampleT
-            if t > obj.nextSampleT
+            if t >= obj.nextSampleT
                 % get reference
                 ref   = obj.RefFunc(t);
                 

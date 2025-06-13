@@ -1,11 +1,13 @@
-% close all 
-% clear
-% clc
-% format short
+close all 
+clear
+clc
+format short
+
+RECORDNAME = "readings/pid1";
 
 %% Create controller
 Ts = 0.005;            % controller loop time (200 Hz)
-Usat = 100;
+Usat = 100;            % input saturation value
 
 % PID
 ctrl1 = PIDController(1200, 0, 100);
@@ -39,7 +41,7 @@ params.g   = 9.81;        % gravity
 params.controller = ctrl;
 
 % Initial conditions: [x0; xdot0; theta0; thetadot0]
-y0 = [ .3;    -.2;   pi+0.02;   -.01];  
+x0 = [ .3;    -.2;   pi+0.02;   -.01];  
 % e.g. slightly perturbed upside-down pendulum
 
 % Time span
@@ -50,38 +52,25 @@ tspan = [0, 10];  % simulate from t=0 to t=10 seconds
 %opts = odeset('RelTol',1e-6,'AbsTol',1e-8);
 %[t, Y] = ode45(@(t,y) invpendulum(t, y, params), tspan, y0, opts);
 simTs = 0.001;
-[t, Y] = rk4_fixed_step(@(t, y) invpendulum(t, y, params), tspan, y0, simTs);
+[t, X] = rk4_fixed_step(@(t, x) invpendulum(t, x, params), tspan, x0, simTs);
 
 % Extract results
-x      = Y(:,1);
-x_dot  = Y(:,2);
-theta  = Y(:,3);
-th_dot = Y(:,4);
+x      = X(:,1);
+x_dot  = X(:,2);
+theta  = X(:,3) - pi;
+th_dot = X(:,4);
 
 % Extract input 
-[t_u, u] = ctrl.getInputPlot();
+[t_u, U] = ctrl.getInputPlot();
+
+% Calculates reference state
+x_ref = ctrl.RefFunc(t);
+
+%% Saves data (WIP fixa gli intervalli di campionamento del controller t_u)
+save(RECORDNAME + ".mat","X", "U", "x_ref", "t", "t_u");
 
 %% Plot results
-figure;
-subplot(3,1,1);
-y_ref = ctrl.RefFunc(t);
-plot(t, y_ref(1, :), 'LineWidth', 1.5, 'Color', 'red')
-hold on;
-plot(t, x, 'LineWidth',1.5, 'Color', 	[0.3010 0.7450 0.9330])
-xlabel('Time (s)'), ylabel('x (m)')
-title('Cart Position');
-
-subplot(3,1,2);
-plot(t, theta - pi, 'LineWidth',1.5)
-xlabel('Time (s)'), ylabel('\theta (rad)')
-title('Pendulum Angle');
-
-
-subplot(3,1,3);
-plot(t_u, u, 'LineWidth',1.5)
-xlabel('Time (s)'), ylabel('u (newtons)')
-title('Input force');
-
+plot_data
 
 %% Play animation
 animation_viewer

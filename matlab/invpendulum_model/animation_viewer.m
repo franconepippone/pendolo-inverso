@@ -28,8 +28,8 @@ cartYv= cartY + [0, 0, cartH*2, cartH*2, 0];
 hCart = fill(cartX, cartYv, [0.2 0.2 0.8]);  % blue cart
 
 % Initial pendulum line
-xp = x(1) + params.l*sin(theta(1));
-yp =            - params.l*cos(theta(1));
+xp = x(1) - params.l*sin(theta(1));
+yp =            + params.l*cos(theta(1));
 hPend = plot([x(1), xp], [0, yp], 'r-', 'LineWidth', 2);
 
 %% ANIMATION LOOP -----------------------------------------------
@@ -43,8 +43,8 @@ for k = 1:length(t)
     set(hCart, 'XData', cartX);
     
     % Update pendulum
-    xp = xc + params.l*sin(th);
-    yp =        - params.l*cos(th);
+    xp = xc - params.l*sin(th);
+    yp =        + params.l*cos(th);
     set(hPend, 'XData', [xc, xp], 'YData', [0, yp]);
     
     % Draw and pause
