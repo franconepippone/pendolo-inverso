@@ -1,9 +1,11 @@
 %% PREPARE DATA ------------------------------------------------
-% Suppose you've already solved and have:
-% t      : [N×1] time vector
-% x      : [N×1] cart positions
-% theta  : [N×1] pendulum angles (rad)
-% l      : pendulum length (scalar)
+% Suppose you already have:
+%   recdata: a simulation record struct available
+
+params = recdata.info.sim_params;
+theta = recdata.states(:, 3);
+t = recdata.t;
+x = recdata.states(:, 1);
 
 %% SET UP FIGURE ------------------------------------------------
 figure('Color','w');

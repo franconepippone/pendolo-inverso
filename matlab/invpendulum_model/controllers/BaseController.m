@@ -8,8 +8,8 @@ classdef (Abstract) BaseController < handle
         Ts = 1       % update period
 
         % logging of inputs
-        execTimes = [0];
-        u = [0];
+        execTimes = [];
+        u = [];
         
         % internal states
         prevU = 0       % last output value (zero-order hold)

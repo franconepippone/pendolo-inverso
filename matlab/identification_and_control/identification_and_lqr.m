@@ -1,8 +1,16 @@
+close all
+clear
+clc
+format short
+
+RECORDNAME = "readings/pid_train_1.mat";
 
 %% Caricamento del dataset
 
-STATES = [x, x_dot, theta, th_dot];
-INPUTS = u';
+load(RECORDNAME);
+
+STATES = recdata.states;
+INPUTS = recdata.inputs;
 
 %% Post-processing of input data
 
@@ -68,13 +76,13 @@ rmse_value = sqrt(mean((Y_train - Y_pred).^2, 'all'));
 disp(rmse_value)
 
 %% Simulazione sistema discreto
-TIMESTEP = 0.01;
+TIMESTEP = recdata.info.controller_ts;
 
 sys = ss(A, B, eye(4), 0, TIMESTEP);
 
 ITER_START = 100;
 U = INPUTS(ITER_START:end);
-t = (ITER_START:N) * 0.01;
+t = (ITER_START:N) * recdata.info.controller_ts;
 
 x0 = STATES(ITER_START, :); % estrae lo stato a quell'iterazione
 
@@ -123,7 +131,8 @@ figure()
 
 sys_cl = ss(A - B*K, zeros(4, 0), eye(4), 0, TIMESTEP);
 
-initial(sys_cl, x0);
+load("readings\simrecord3.mat")
+initial(sys_cl, recdata.info.initial_cond);
 
 
 
