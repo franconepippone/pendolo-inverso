@@ -1,4 +1,4 @@
-classdef MultiPIDController < BaseController
+classdef MultiPIDController < DiscreteTimeController
     % PIDController with discrete-time update (zero-order hold)
     
     properties
@@ -8,7 +8,7 @@ classdef MultiPIDController < BaseController
     
     methods
         function obj = MultiPIDController(pid1, pid2, Ts, uMin, uMax)
-            obj@BaseController(Ts, uMin, uMax)
+            obj@DiscreteTimeController(Ts, uMin, uMax)
             % binds the two internal pid controllers
             obj.pid1 = pid1;
             obj.pid2 = pid2;

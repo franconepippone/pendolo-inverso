@@ -1,4 +1,4 @@
-function eval_ident(A, B, states_test, inputs_test)
+function eval_ident(A, B, states_test, inputs_test, dataset_name)
     % Generates error graphs and prints rmse by testing the A, B matrices
     % againts the provided dataset
 
@@ -19,9 +19,15 @@ function eval_ident(A, B, states_test, inputs_test)
     subplot(4, 1, 3); plot([0.01 * X_test(:, 3) err(:, 3)]); legend({'cart position (x10-2)', "error"});
     subplot(4, 1, 4); plot([0.02 * X_test(:, 4) err(:, 4)]); legend({'cart velocity (x2*10-2)', "error"});
     grid on;
-    sgtitle("Errore sul dataset"); % Assigns a title to the whole group
+    
+    text = "";
+    if nargin > 4
+        text = " " + dataset_name;
+    end
 
-    disp("Root mean squared error on dataset:")
+    sgtitle("Errore sul" + text + " dataset"); % Assigns a title to the whole group
+
+    disp("Root mean squared error on" + text + " dataset:")
     rmse_value = sqrt(mean((Y_test - Y_pred).^2, 'all'));
     disp(rmse_value)
     

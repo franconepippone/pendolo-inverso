@@ -9,7 +9,7 @@
 %   TIMESTEP is also known
 
 Ts = TIMESTEP;                  % controller loop time
-x0 = [ 1;    -1;   .8;   -.6];  % initial cond [x, x_dot, theta, theta_dot]
+x0 = [ .4;    -1;   .1;   -.3];  % initial cond [x, x_dot, theta, theta_dot]
 t_max = 5;                      % simulation timespan
 
 %% Simulation of the LINEAR A, B system

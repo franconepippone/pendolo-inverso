@@ -1,4 +1,4 @@
-classdef SFController < BaseController
+classdef SFController < DiscreteTimeController
     % PIDController with discrete-time update (zero-order hold)
     
     properties
@@ -7,7 +7,7 @@ classdef SFController < BaseController
     
     methods
         function obj = SFController(K, Ts, uMin, uMax)
-            obj@BaseController(Ts, uMin, uMax);
+            obj@DiscreteTimeController(Ts, uMin, uMax);
             obj.K = K;
         end
         

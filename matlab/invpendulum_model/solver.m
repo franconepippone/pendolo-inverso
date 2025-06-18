@@ -3,28 +3,31 @@ clear
 clc
 format short
 
-CUSTOM_NAME = ""
-SIM_NOTES = "risposta a condizioni iniziali con sf gain calcolato con regressione su pid_train_1";
+CUSTOM_NAME = "";
+SIM_NOTES = "test con realistic controller";
 
 %% Create controller
 Ts = 0.005;            % controller loop time (200 Hz)
 Usat = 100;            % input saturation value
 
 % PID
-ctrl1 = PIDController(1200, 0, 100);
-ctrl1 = PIDController(1200, 0, 90);
+ctrl1 = PIDController(1000, 0, 85);
 ctrl2 = PIDController(-500, 0, -300);
-ctrl2 = PIDController(-1000, 0, -300);
 ctrl_pid = MultiPIDController(ctrl1, ctrl2, Ts, -Usat, Usat);
 
 % SF
-K = [-500,-300, 1200,100];
-K = [54.9983, -9.66205, 75.1428, 28.6297];
 K = [-74.66163, -65.4395, 247.9755, 43.78731];
+K = [-16756.6426, -6084.35995, 10885.565, 1678.14523];
 ctrl_sf = SFController(K, Ts, -Usat, Usat);
 
 % chooses controller
-ctrl = ctrl_pid;
+ctrl_ideal = ctrl_pid;
+
+% Turns it into a realistic controller (adds noise, packet loss...)
+ctrl = RealisticController(ctrl_ideal);
+ctrl.noise_var = 0 * [1 1 .1 .1];
+ctrl.state_loss_prob = 0;
+ctrl.input_loss_prob = 0;
 
 % Generate smooth square wave reference signal of amplitude 1
 T = 5; % period
@@ -34,15 +37,15 @@ square_wave = @(t) (1 ./ (1 + exp(-k * (mod(t, T) - T/4))) - ...
 
 % maps square wave to state variables and uses it as the reference state
 ctrl.RefFunc = @(t) [.2; 0; 0; 0] * ( ...
-    square_wave(t) + 0.4 * square_wave(t*2.15)) * 0; 
+    square_wave(t) + 0.4 * square_wave(t*2.15)); 
 
 
 %% Simulate
 % Initial conditions: [x0; xdot0; theta0; thetadot0]
-x0 = [ 1;    -1;   .2;   -.6];
-t_max = 5;
+x0 = [ 0;    0;   0;   0];
+t_max = 20;
 
-recdata = solve_invpen(x0, ctrl, 5);
+recdata = solve_invpen(x0, ctrl, t_max);
 recdata.info.notes = SIM_NOTES;  % add description to simulation
 
 %% Save simulation

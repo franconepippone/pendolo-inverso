@@ -1,4 +1,4 @@
-function save_recdata(datastruct, path)
+function save_recdata(recdata, path)
     % Saves a recdata struct in the default folder readings/
     % Path may be overwritten by providing the "path" argument
     % If path is not give, data is saved in a file located at readings/
@@ -20,6 +20,6 @@ function save_recdata(datastruct, path)
         fullpath = path;
     end
 
-    save(fullpath,"datastruct");
+    save(fullpath,"recdata");
     disp("Data saved at: " + fullpath)
 end

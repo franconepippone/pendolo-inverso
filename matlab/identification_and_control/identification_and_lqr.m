@@ -4,7 +4,7 @@ clc
 format short
 
 RECORDNAME_TRAIN = "readings/pid_train_1.mat";
-RECORDNAME_TEST = "readings/pid_train_1.mat";
+RECORDNAME_TEST = "readings/pid_test_1.mat";
 
 %% Caricamento del dataset
 
@@ -21,12 +21,10 @@ INPUTS_tr = recdata_train.inputs;
 
 %% Evaluation of trainining
 
-disp("train")
-eval_ident(A, B, STATES_tr, INPUTS_tr); % eval on train dataset
+eval_ident(A, B, STATES_tr, INPUTS_tr, "train"); % eval on train dataset
 
 load(RECORDNAME_TEST);
-disp("test")
-eval_ident(A, B, recdata.states, recdata.inputs);
+eval_ident(A, B, recdata.states, recdata.inputs, "test");
 
 %% State space analysis and LQR
 
@@ -34,11 +32,8 @@ eigs(A);
 R = ctrb(A, B);
 rank(R);
 
-Q = [100 0 0 0; 
-    0 10 0 0; 
-    0 0 100 0; 
-    0 0 0 10];       % State cost matrix
-R = .01;              % Control cost matrix
+Q = diag([10000 0 0 0]);    % State cost matrix
+R = .00001;              % Control cost matrix
 
 % Compute the optimal gain K using discrete LQR
 [K, P, E] = dlqr(A, B, Q, R);
