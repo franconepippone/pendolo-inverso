@@ -3,6 +3,7 @@ clear
 clc
 format short
 
+CUSTOM_NAME = ""
 SIM_NOTES = "risposta a condizioni iniziali con sf gain calcolato con regressione su pid_train_1";
 
 %% Create controller
@@ -42,10 +43,15 @@ x0 = [ 1;    -1;   .2;   -.6];
 t_max = 5;
 
 recdata = solve_invpen(x0, ctrl, 5);
-recdata.info.notes = SIM_NOTES;  % add description to simulation 
+recdata.info.notes = SIM_NOTES;  % add description to simulation
 
 %% Save simulation
-save_recdata(recdata);
+if CUSTOM_NAME == ""
+    save_recdata(recdata);
+else
+    save_recdata(recdata, CUSTOM_NAME)
+end
+
 
 %% Plot results
 plot_data
