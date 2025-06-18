@@ -2,3 +2,8 @@
 *.pyc
 /analisi_dati/__pycache__
 /hw_readings/py/__pycache__
+
+# matlab files
+*.asv
+*.m~         # Backup versions
+*.mlx~        # Live script backups
