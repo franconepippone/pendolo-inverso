@@ -1,11 +1,10 @@
-function varargout = solve_invpen(initial_x, controller, max_time, save_to_disk)
+function simdata = solve_invpen(initial_x, controller, max_time)
     arguments
         initial_x (4,1) double % enforce initial_x to be a 4x1 double matrix
         controller BaseController % enforce controller to be a controller object
         max_time double
-        save_to_disk boolean
     end
-
+    
     %% Setup simulation
     % Define parameters
     params.M   = 1.0;         % cart mass (1kg)
@@ -30,7 +29,7 @@ function varargout = solve_invpen(initial_x, controller, max_time, save_to_disk)
     X_sim(:, 3) = X_sim(:, 3) - pi; % sets zero angle to be upwards
     
     % Extract input 
-    [t, U] = ctrl.getInputPlot();
+    [t, U] = controller.getInputPlot();
     t = floor(t * 1000) / 1000; % truncates up to third decimal digit
     
     % Extracts simulation states at time points matching controller execution times within epsilon tolerance
@@ -38,14 +37,8 @@ function varargout = solve_invpen(initial_x, controller, max_time, save_to_disk)
     sameIdxs = any(abs(t_sim' - t) < epsilon, 2);
     X = X_sim(sameIdxs, :);
     
-    % Extract results
-    x      = X(:,1);
-    x_dot  = X(:,2);
-    theta  = X(:,3);
-    th_dot = X(:,4);
-    
     % Calculates reference state
-    x_ref = ctrl.RefFunc(t);
+    x_ref = controller.RefFunc(t);
     
     %% Saves data in a struct
     recdata.states = X;
@@ -57,21 +50,10 @@ function varargout = solve_invpen(initial_x, controller, max_time, save_to_disk)
     recdata.info.sim_timespan = tspan;
     recdata.info.initial_cond = x0;
     recdata.info.sim_params = params;
-    recdata.info.controller_ts = Ts;
+    recdata.info.controller_ts = controller.Ts;
     recdata.info.simulation_ts = simTs;
-    recdata.info.input_saturation = Usat;
     recdata.info.date = datetime;
-    recdata.info.notes = SIM_NOTES;
+    recdata.info.notes = "nessuna info addizionale.";
 
-    if nargout == 0
-        varargout{1} = x^2; % Return square if one output is expected
-    elseif nargout == 2
-        varargout{1} = x^2; % First output: square
-        varargout{2} = sqrt(x); % Second output: square root
-    else
-        varargout{1} = 'Invalid number of outputs!';
-    end
-
-
-
+    simdata = recdata;
 end 
