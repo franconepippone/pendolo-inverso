@@ -23,7 +23,7 @@ K = [-74.66163, -65.4395, 247.9755, 43.78731];
 ctrl_sf = SFController(K, Ts, -Usat, Usat);
 
 % chooses controller
-ctrl = ctrl_sf;
+ctrl = ctrl_pid;
 
 % Generate smooth square wave reference signal of amplitude 1
 T = 5; % period
@@ -51,4 +51,4 @@ save_recdata(recdata);
 plot_data
 
 %% Play animation
-animation_viewer
+animation_viewer(recdata)

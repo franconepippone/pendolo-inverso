@@ -21,9 +21,11 @@ INPUTS_tr = recdata_train.inputs;
 
 %% Evaluation of trainining
 
+disp("train")
 eval_ident(A, B, STATES_tr, INPUTS_tr); % eval on train dataset
 
 load(RECORDNAME_TEST);
+disp("test")
 eval_ident(A, B, recdata.states, recdata.inputs);
 
 %% State space analysis and LQR
@@ -43,4 +45,6 @@ R = .01;              % Control cost matrix
 disp('LQR Gain K:')
 disp(strjoin(string(K), ', '));
 
-sys_cl = ss(A - B*K, zeros(4, 0), eye(4), 0, TIMESTEP);
+
+%% Valutazione con simulazioni
+compare_systems

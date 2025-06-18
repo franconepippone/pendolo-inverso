@@ -16,8 +16,8 @@ xlabel('Time (s)'), ylabel('x (m)')
 title('Cart Position');
 
 subplot(3,1,2);
-plot(recdata.t, theta, 'LineWidth',1.5)
-xlabel('Time (s)'), ylabel('\theta (rad)')
+plot(recdata.t, rad2deg(theta), 'LineWidth',1.5)
+xlabel('Time (s)'), ylabel('\theta (deg)')
 title('Pendulum Angle');
 
 
@@ -25,3 +25,7 @@ subplot(3,1,3);
 plot(recdata.t, U, 'LineWidth',1.5)
 xlabel('Time (s)'), ylabel('u (newtons)')
 title('Input force');
+
+if isfield(recdata.info, 'title')
+    sgtitle(recdata.info.title); % Assigns a title to the whole group
+end
