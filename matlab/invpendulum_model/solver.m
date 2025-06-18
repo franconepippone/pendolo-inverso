@@ -48,7 +48,7 @@ params.g   = 9.81;        % gravity
 params.controller = ctrl;
 
 % Initial conditions: [x0; xdot0; theta0; thetadot0]
-x0 = [ .3;    -.3;   .1;   -.3];
+x0 = [ 1;    -1;   .2;   -.6];
 
 % Time span
 tspan = [0, 5];  % simulate from t=0 to t=10 seconds
@@ -56,8 +56,8 @@ tspan = [0, 5];  % simulate from t=0 to t=10 seconds
 %% Simulate
 % Solve
 simTs = 0.001;
-x0(3) = x0(3) + pi; % brings theta in the simulation frame (0 is downards, pi is upwards)
-[t_sim, X_sim] = rk4_fixed_step(@(t, x) invpendulum(t, x, params), tspan, x0, simTs);
+x0_real = x0 + [0; 0; pi; 0]; % brings theta in the simulation frame (0 is downards, pi is upwards)
+[t_sim, X_sim] = rk4_fixed_step(@(t, x) invpendulum(t, x, params), tspan, x0_real, simTs);
 X_sim(:, 3) = X_sim(:, 3) - pi; % sets zero angle to be upwards
 
 % Extract input 
@@ -93,13 +93,13 @@ recdata.info.simulation_ts = simTs;
 recdata.info.input_saturation = Usat;
 recdata.info.date = datetime;
 recdata.info.notes = SIM_NOTES;
-recdata.info.og_filename = DEFAULT_RECORDNAME + string(sim_file_counter);
 
 % extract/increment/saves file counter (avoid duplicate files)
 load(RECORDS_DIRECTORY + "counter.mat")
 sim_file_counter = sim_file_counter + 1;
 save(RECORDS_DIRECTORY + "counter.mat", "sim_file_counter");
 
+recdata.info.og_filename = DEFAULT_RECORDNAME + string(sim_file_counter);
 fullpath = RECORDS_DIRECTORY + recdata.info.og_filename + ".mat";
 save(fullpath,"recdata");
 

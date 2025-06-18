@@ -11,7 +11,7 @@ figure;
 subplot(3,1,1);
 plot(recdata.t, x_ref(1, :), 'LineWidth', 1.5, 'Color', 'red')
 hold on;
-plot(recdata.t, x, 'LineWidth',1.5, 'Color', 	[0.3010 0.7450 0.9330])
+plot(recdata.t, x, 'LineWidth',1.5, 'Color', 	[0.0000, 0.4470, 0.7410])
 xlabel('Time (s)'), ylabel('x (m)')
 title('Cart Position');
 
