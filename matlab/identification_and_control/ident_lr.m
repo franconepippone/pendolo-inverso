@@ -10,5 +10,4 @@ function [A, B] = ident_lr(states, inputs)
     % estraggo le matrici A e B dal risultato
     A = M_hat(1:4, :)';
     B = M_hat(5, :)';
-
 end
