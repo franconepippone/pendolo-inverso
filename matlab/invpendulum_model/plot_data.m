@@ -14,6 +14,7 @@ hold on;
 plot(recdata.t, x, 'LineWidth',1.5, 'Color', 	[0.0000, 0.4470, 0.7410])
 xlabel('Time (s)'), ylabel('x (m)')
 title('Cart Position');
+legend("Reference (tracked) x")
 
 subplot(3,1,2);
 plot(recdata.t, rad2deg(theta), 'LineWidth',1.5)
