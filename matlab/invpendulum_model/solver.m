@@ -18,10 +18,11 @@ ctrl_pid = MultiPIDController(ctrl1, ctrl2, Ts, -Usat, Usat);
 % SF
 K = [-74.66163, -65.4395, 247.9755, 43.78731];
 K = [-16756.6426, -6084.35995, 10885.565, 1678.14523];
+K = [0,0,0,0];
 ctrl_sf = SFController(K, Ts, -Usat, Usat);
 
 % chooses controller
-ctrl_ideal = ctrl_pid;
+ctrl_ideal = ctrl_sf;
 
 % Turns it into a realistic controller (adds noise, packet loss...)
 ctrl = RealisticController(ctrl_ideal);
@@ -35,14 +36,20 @@ k = 5; % the lower the smoother
 square_wave = @(t) (1 ./ (1 + exp(-k * (mod(t, T) - T/4))) - ...
                      1 ./ (1 + exp(-k * (mod(t, T) - 3*T/4))));
 
+derivative_sq = @(t) ...
+    k*exp(-k*(mod(t,T) - T/4))    ./ (1 + exp(-k*(mod(t,T) - T/4))).^2 ...
+  - k*exp(-k*(mod(t,T) - 3*T/4))./(1 + exp(-k*(mod(t,T) - 3*T/4))).^2;
+
 % maps square wave to state variables and uses it as the reference state
 ctrl.RefFunc = @(t) [.2; 0; 0; 0] * ( ...
-    square_wave(t) + 0.4 * square_wave(t*2.15)); 
+    square_wave(t) + 0.4 * square_wave(t*2.15))*0; 
+
+ctrl.RefFunc = @(t) [square_wave(t');0; 0; 0];
 
 
 %% Simulate
 % Initial conditions: [x0; xdot0; theta0; thetadot0]
-x0 = [ 0;    0;   0;   0];
+x0 = [ 0;    0;   0.01;   0];
 t_max = 20;
 
 recdata = solve_invpen(x0, ctrl, t_max);

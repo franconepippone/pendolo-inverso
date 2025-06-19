@@ -7,3 +7,6 @@
 *.asv
 *.m~         # Backup versions
 *.mlx~        # Live script backups
+
+# all recordings with default name
+**/simrecord*.mat
