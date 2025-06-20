@@ -7,7 +7,7 @@ classdef RealisticController < BaseController
         controller          % any controller iheriting from BaseController
         RefFunc = @(t) 0;
         Ts = -1;            % -1 if wrapping a continuous controller
-        noise_var           % variance of gaussian noise on input state
+        noise_std           % std of gaussian noise on input state
         state_loss_prob = 0       % probabilty of a state packet loss
         input_loss_prob = 0       % probabilty of a input packet loss
     end
@@ -31,7 +31,7 @@ classdef RealisticController < BaseController
         function u = step(obj, y, t)
             
             % Y (STATE VECTOR) CHANNEL
-            y_noisy = y + randn(size(y)) .* obj.noise_var'; % adds gaussian noise
+            y_noisy = y + randn(size(y)) .* obj.noise_std'; % adds gaussian noise
             
             % y is dropped with probability
             y_loss = (rand() > obj.state_loss_prob) * y_noisy;
@@ -39,7 +39,7 @@ classdef RealisticController < BaseController
             u_raw = obj.controller.step(y_loss, t);  % step the underlying controller
 
             % U CHANNEL
-            u_raw = u_raw * (rand() > obj.input_loss_prob);
+            %u_raw = u_raw * (rand() > obj.input_loss_prob);
             u = u_raw;
         end
 

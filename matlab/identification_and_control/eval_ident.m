@@ -14,10 +14,10 @@ function eval_ident(A, B, states_test, inputs_test, dataset_name)
     err = Y_test - Y_pred;
     
     figure()
-    subplot(4, 1, 1); plot([X_test(:, 1) err(:, 1)]); legend({'theta', "error"}); 
-    subplot(4, 1, 2); plot([X_test(:, 2) err(:, 2)]); legend({'theta prime', "error"});
-    subplot(4, 1, 3); plot([0.01 * X_test(:, 3) err(:, 3)]); legend({'cart position (x10-2)', "error"});
-    subplot(4, 1, 4); plot([0.02 * X_test(:, 4) err(:, 4)]); legend({'cart velocity (x2*10-2)', "error"});
+    subplot(4, 1, 1); plot([0.01 * X_test(:, 1) err(:, 1)]); legend({'x (x10-2)', "error"}); 
+    subplot(4, 1, 2); plot([0.01 * X_test(:, 2) err(:, 2)]); legend({'x dot (x10-2)', "error"});
+    subplot(4, 1, 3); plot([0.01 * X_test(:, 3) err(:, 3)]); legend({'theta (x10-2)', "error"});
+    subplot(4, 1, 4); plot([0.02 * X_test(:, 4) err(:, 4)]); legend({'theta dot (x2*10-2)', "error"});
     grid on;
     
     text = "";

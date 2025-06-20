@@ -3,8 +3,8 @@ clear
 clc
 format short
 
-RECORDNAME_TRAIN = "readings/pid_train_1.mat";
-RECORDNAME_TEST = "readings/pid_test_1.mat";
+RECORDNAME_TRAIN = "readings/tesi_pid_train1.mat";
+RECORDNAME_TEST = "readings/tesi_pid_test1.mat";
 
 %% Caricamento del dataset
 

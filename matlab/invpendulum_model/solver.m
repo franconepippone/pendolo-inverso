@@ -22,12 +22,12 @@ K = [-16756.6426, -6084.35995, 10885.565, 1678.14523];
 ctrl_sf = SFController(K, Ts, -Usat, Usat);
 
 % chooses controller
-ctrl_ideal = ctrl_pid;
+ctrl_ideal = ctrl_sf;
 
 % Turns it into a realistic controller (adds noise, packet loss...)
 ctrl = RealisticController(ctrl_ideal);
-ctrl.noise_var = 0 * [1 1 .1 .1];
-ctrl.state_loss_prob = 0;
+ctrl.noise_std = .0001 * [1 1 1 1];
+ctrl.state_loss_prob = .3;
 ctrl.input_loss_prob = 0;
 
 
@@ -41,10 +41,7 @@ derivative_sq = @(t) ...
     k*exp(-k*(mod(t,T) - T/4))    ./ (1 + exp(-k*(mod(t,T) - T/4))).^2 ...
   - k*exp(-k*(mod(t,T) - 3*T/4))./(1 + exp(-k*(mod(t,T) - 3*T/4))).^2;
 
-% maps square wave to state variables and uses it as the reference state
-ctrl.RefFunc = @(t) [.2; 0; 0; 0] * ( ...
-    square_wave(t) + 0.4 * square_wave(t*2.15)); 
-
+% Generates reference signal by combining square waves
 poly_f = @(f, t) f(t) + f(t * 2.15) * 0.4 + 0.1 *f(t * 5) + f(t * 0.5); 
 poly_f = @(f, t) f(t);
 
@@ -57,7 +54,7 @@ ctrl.RefFunc = @(t) .2 * ...
 
 %% Simulate
 % Initial conditions: [x0; xdot0; theta0; thetadot0]
-x0 = [ 0;    0;   0.01;   0];
+x0 = [ 0;    0;   0;   0];
 t_max = 10;
 
 recdata = solve_invpen(x0, ctrl, t_max);
@@ -70,9 +67,15 @@ else
     save_recdata(recdata, CUSTOM_NAME)
 end
 
-
 %% Plot results
 plot_data
 
+%% Compute tracking fitness
+
+disp("Tracking fitness:")
+fit = 1 / (sum(abs(recdata.states(:, 1) - recdata.reference(1, :)')) / t_max);
+disp(fit)
+
 %% Play animation
 animation_viewer(recdata)
+
