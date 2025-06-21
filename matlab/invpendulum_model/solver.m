@@ -26,14 +26,13 @@ ctrl_ideal = ctrl_sf;
 
 % Turns it into a realistic controller (adds noise, packet loss...)
 ctrl = RealisticController(ctrl_ideal);
-ctrl.noise_std = .0001 * [1 1 1 1];
-ctrl.state_loss_prob = .3;
+ctrl.noise_std = .000 * [1 1 1 1];
+ctrl.state_loss_prob = .0;
 ctrl.input_loss_prob = 0;
-
 
 % Generate smooth square wave reference signal of amplitude 1
 T = 5; % period
-k = 5; % the lower the smoother
+k = 10; % the lower the smoother
 square_wave = @(t) (1 ./ (1 + exp(-k * (mod(t, T) - T/4))) - ...
                      1 ./ (1 + exp(-k * (mod(t, T) - 3*T/4))));
 
@@ -51,11 +50,20 @@ ctrl.RefFunc = @(t) .2 * ...
     zeros(size(t)); 
     zeros(size(t))];
 
+% Smooth ramp reference
+b = 8000; % roll-in factor
+m = 100; % target speed (m/s)
+smooth_ramp = @(t) (m*m * (t.*t))./(m*t + b);
+der_smooth_ramp = @(t) (m*m*m* (t.*t) + 2 * m*m*b*t) ./ power(m*t + b, 2);
+
+ctrl.RefFunc = @(t) [smooth_ramp(t); der_smooth_ramp(t); 
+    zeros(size(t)); zeros(size(t))];
+
 
 %% Simulate
 % Initial conditions: [x0; xdot0; theta0; thetadot0]
 x0 = [ 0;    0;   0;   0];
-t_max = 10;
+t_max = 100;
 
 recdata = solve_invpen(x0, ctrl, t_max);
 recdata.info.notes = SIM_NOTES;  % add description to simulation
