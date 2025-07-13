@@ -16,6 +16,11 @@ classdef MultiPIDController < DiscreteTimeController
         end
         
         function u = control_law(obj, y_ref, y, t)
+            if (abs(y(1)) > .8)
+                u = 0;
+                return
+            end
+
             y = (y_ref - y);
             err1 = y(3); % extract theta
             err2 = y(1); % extract x

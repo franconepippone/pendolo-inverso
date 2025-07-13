@@ -3,7 +3,7 @@ clear
 clc
 format short
 
-CUSTOM_NAME = "readings_final/pid_train.mat";
+CUSTOM_NAME = "readings_final/asd.mat";
 SIM_NOTES = "final";
 
 %% Create controller
@@ -12,8 +12,8 @@ Usat = 25;            % input saturation value
 
 
 % -------------- PID
-ctrl1 = PIDController(1000, 0, 85);
-ctrl2 = PIDController(-500, -0, -300);
+ctrl1 = PIDController(1000, 10, 100);
+ctrl2 = PIDController(-500, -50, -300);
 ctrl_pid = MultiPIDController(ctrl1, ctrl2, Ts, -Usat, Usat);
 
 
@@ -30,7 +30,7 @@ ctrl_sf = SFController(K, Ts, -Usat, Usat);
 
 
 % --------------- SF + Internal model design
-Ke = [-1092.7861, -315.44207, 635.17729, 97.785289, -8.8321702];
+Ke = [-1092.9579, -315.95446, 638.34815, 98.460198, -8.8319058];
 Kx = Ke(1:4);
 Ki = Ke(5);
 ctrl_imd = LQIController(Kx, Ki, 0, Ts, -Usat, Usat); 
@@ -45,18 +45,18 @@ ctrl.noise_std = .000 * [1 1 1 1];
 ctrl.state_loss_prob = .0;
 ctrl.input_loss_prob = 0;
 
-ctrl = ctrl_pid;
+ctrl = ctrl_imd;
 
 % ================ Generate smooth square wave reference signal of amplitude 1
 T = 5; % period
-k = 2; % the lower the smoother
-A = .1; % amplitude
-smooth_wave = @(t) A * tanh(k * sin(2*pi*(t+T/2)/T));
+k = 5; % the lower the smoother
+A = .2; % amplitude
+smooth_wave = @(t) A * tanh(k * sin(2*pi*(t-T/4)/T)) + A;
 
 
 % Generates reference signal by combining square waves
 poly_f = @(f, t) f(t) + f(t * 2.15) * 0.4 + 0.1 *f(t * 5) + f(t * 0.5); 
-poly_f = @(f, t) f(t) + f(t*2.15) - f(t * 0.5) + f(t*1.5)
+%poly_f = @(f, t) f(t) - 0.4 * f(t*2.15) + 0.8 * f(t * 0.3) - f(t*1.5);
 poly_f = @(f, t) f(t);
 %poly_f = @(f, t) 0;
 
@@ -78,7 +78,7 @@ der_smooth_ramp = @(t) (m*m*m* (t.*t) + 2 * m*m*b*t) ./ power(m*t + b, 2);
 
 %% Simulate
 % Initial conditions: [x0; xdot0; theta0; thetadot0]
-x0 = [-.01, 0, .1, .1]';
+x0 = [0, .2, .1, -.1]';
 t_max = 15;
 
 recdata = solve_invpen(x0, ctrl, t_max);
@@ -94,11 +94,32 @@ end
 %% Plot results
 plot_data
 
+%% Debug simulation info
+disp("Reference parameters:")
+% Print variables in a compact format
+fprintf('T: %.2f, k: %.2f, A: %.2f\n\n', T, k, A);
+disp("Simulation parameters:")
+% Print variables in a compact format
+fprintf('t_max: %.2f, x0: [%.2f, %.2f, %.2f, %.2f]\n\n', t_max, x0);
+
+disp("PID Gains for ctrl1:")
+fprintf('Kp: %.2f, Ki: %.2f, Kd: %.2f\n', ctrl1.Kp, ctrl1.Ki, ctrl1.Kd);
+
+disp("PID Gains for ctrl2:")
+fprintf('Kp: %.2f, Ki: %.2f, Kd: %.2f\n', ctrl2.Kp, ctrl2.Ki, ctrl2.Kd);
+
+poly_f
+
+% % Automatically copy the command window text to clipboard
+% commandWindowText = evalc('disp(get(0, ''CommandWindow'')'); % Capture the command window text
+% clipboard('copy', commandWindowText); % Copy to clipboard
+% disp('Command window text copied to clipboard.');
+
 %% Compute tracking fitness
 
-disp("Tracking fitness:")
-fit = 1 / (sum(abs(recdata.states(:, 1) - recdata.reference(1, :)')) / t_max);
-disp(fit)
+% disp("Tracking fitness:")
+% fit = 1 / (sum(abs(recdata.states(:, 1) - recdata.reference(1, :)')) / t_max);
+% disp(fit)
 
 %% Debugging the instant jumps error
 % the cause was found to be sudden jumps in reference signal first
@@ -124,4 +145,3 @@ disp(fit)
 
 %% Play animation
 %animation_viewer(recdata)
-

@@ -3,8 +3,8 @@ clear
 clc
 format short
 
-RECORDNAME_TRAIN = "readings/tesi_pid_train1.mat";
-RECORDNAME_TEST = "readings/tesi_pid_test1.mat";
+RECORDNAME_TRAIN = "readings_final/pid_train.mat";
+RECORDNAME_TEST = "readings_final/pid_test.mat";
 
 %% Caricamento del dataset
 
@@ -42,7 +42,7 @@ disp(strjoin(string(K), ', '));
 
 
 %% Valutazione con simulazioni
-%compare_systems
+compare_systems
 
 %% Internal model design for STEP
 
@@ -87,7 +87,7 @@ for k = 1:N
 end
 
 time = (0:N-1)*Ts;
-figure;
+figure('WindowStyle', 'normal', 'Units', 'pixels', 'Position', [200, 200, 1000, 550]);
 plot(time, ylog), grid on, hold on
 plot(time, r * (1:N > 500))
 title('Tracking x_1 with Discrete LQI')
@@ -127,12 +127,6 @@ Ki2 = K_aug(n+2);        % guadagno sul doppio integratore
 
 disp('LQR Gain K on extended system (imd ramp):')
 disp(strjoin(string(K_aug), ', '));
-
-% Simulate
-x = [-.01, 0, .1, 0]'; xi = 0;
-r = .2;
-N = 1000;
-xlog = zeros(4,N); ylog = zeros(1,N); ulog = zeros(1,N);
 
 
 % Inizializzazione

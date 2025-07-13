@@ -9,7 +9,7 @@
 %   TIMESTEP is also known
 
 Ts = TIMESTEP;                  % controller loop time
-x0 = [ .4;    -1;   .1;   -.3];  % initial cond [x, x_dot, theta, theta_dot]
+x0 = [ .2;    -.2;   .1;   -.2];  % initial cond [x, x_dot, theta, theta_dot]
 t_max = 5;                      % simulation timespan
 
 %% Simulation of the LINEAR A, B system
@@ -28,13 +28,13 @@ recdata_lin = recdata; % backup of this data
 
 %% Simulation of the real system
 % Create controller
-Usat = 100;            % input saturation value
+Usat = 25;            % input saturation value
 
 % SF
 ctrl = SFController(K, Ts, -Usat, Usat);
 ctrl.RefFunc = @(t) 0; % brings state to 0
 
-recdata = solve_invpen(x0, ctrl, 5);
+recdata = solve_invpen(x0, ctrl, t_max);
 recdata.info.title = "Non-linear system";
 
 plot_data

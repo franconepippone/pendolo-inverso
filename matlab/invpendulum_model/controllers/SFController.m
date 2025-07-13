@@ -14,6 +14,12 @@ classdef SFController < DiscreteTimeController
         end
         
         function u = control_law(obj, y_ref, y, t)
+            % if outside linearity
+            if (abs(y(3)) > .8)
+                u = 0;
+                return
+            end
+
             isAllZero = all(y(:) == 0);
             if isAllZero
                 if isnan(obj.prev_y)

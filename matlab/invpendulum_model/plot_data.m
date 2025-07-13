@@ -24,11 +24,11 @@ plot(recdata.t, rad2deg(theta), 'LineWidth',1)
 xlabel('Time (s)'), ylabel('\theta (deg)')
 title('Pendulum Angle');
 padded = get(gca, 'YLim'); % Get current y limits
-margin = 0.05 * range(padded); % Calculate margin as 10% of the range
-ylim([padded(1) - margin, padded(2) + margin]); % Set new y limits with margin
+margin = 0.1 * range(padded); % Calculate margin as 10% of the range
+ylim([min(rad2deg(theta)) - margin, max(rad2deg(theta)) + margin]); % Set new y limits with margin
 
 subplot(3,1,3);
-plot(recdata.t, U, 'LineWidth',1.5)
+plot(recdata.t, U, 'LineWidth',1)
 xlabel('Time (s)'), ylabel('u (newtons)')
 title('Input force');
 

@@ -13,9 +13,9 @@ function eval_ident(A, B, states_test, inputs_test, dataset_name)
     Y_pred = X_test * M_hat;
     err = Y_test - Y_pred;
     
-    figure()
-    subplot(4, 1, 1); plot([X_test(:, 1) ]); legend({'x'}); ylabel('m'); title("x (meters)");
-    subplot(4, 1, 2); plot([err(:, 1)], 'Color', [0.85, 0.32, 0.09]); title("Error on next prediction of x");
+    figure('WindowStyle', 'normal', 'Units', 'pixels', 'Position', [200, 200, 1100, 700]);
+    subplot(4, 1, 1); plot([X_test(:, 1) ]); ylabel('m'); title("x (meters)");
+    subplot(4, 1, 2); plot([err(:, 1)], 'Color', [0.85, 0.32, 0.09]); title("Error on next prediction of x"); grid on;
     subplot(4, 1, 3); plot([X_test(:, 3)]); title("theta (radians)"); ylabel('rad');
     subplot(4, 1, 4); plot([err(:, 3)], 'Color', [0.85, 0.32, 0.09]); title("Error on next prediction of theta");
     grid on;

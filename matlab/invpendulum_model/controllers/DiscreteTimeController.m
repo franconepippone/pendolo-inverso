@@ -14,8 +14,13 @@ classdef (Abstract) DiscreteTimeController < BaseController
         % internal states
         prevU = 0       % last output value (zero-order hold)
         nextSampleT = 0  % next time at which to update
-        
+        hasJustStepped = false
+
         RefFunc = @(t) 0;
+
+        %packet losses
+        p_input_loss = 0;
+        alpha = .5; % decay rate
     end
     
     methods (Abstract)
@@ -36,9 +41,11 @@ classdef (Abstract) DiscreteTimeController < BaseController
         
         function u = step(obj, y, t)
             % y is the state vector
+            obj.hasJustStepped = false;
 
             % Only update at t >= nextSampleT
             if t >= obj.nextSampleT
+                obj.hasJustStepped = true; % true only if step occurred
                 % get reference
                 ref   = obj.RefFunc(t);
                 
@@ -47,7 +54,10 @@ classdef (Abstract) DiscreteTimeController < BaseController
                 
                 % Saturate
                 uraw = min(max(uraw, obj.uMin), obj.uMax);
-                
+
+                gamma = (rand() > obj.p_input_loss);
+                uraw = (gamma)* uraw + obj.prevU * (1-gamma) * obj.alpha; % last at .5
+
                 % Save for hold
                 obj.prevU       = uraw;
                 obj.nextSampleT = obj.nextSampleT + obj.Ts;

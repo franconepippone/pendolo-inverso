@@ -37,9 +37,12 @@ classdef RealisticController < BaseController
             y_loss = (rand() > obj.state_loss_prob) * y_noisy;
 
             u_raw = obj.controller.step(y_loss, t);  % step the underlying controller
-
+            
             % U CHANNEL
-            %u_raw = u_raw * (rand() > obj.input_loss_prob);
+            % if obj.controller.hasJustStepped
+            %     u = u_raw * (rand() > obj.input_loss_prob);
+            % end
+            % u_raw = u_raw * (rand() > obj.input_loss_prob);
             u = u_raw;
         end
 

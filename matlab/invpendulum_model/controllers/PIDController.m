@@ -9,7 +9,7 @@ classdef PIDController < handle
         % internal states
         intError = 0     % accumulated integral of error
         prevError = nan    % error at last update
-        prevExcTime = -1000 % last time the controller was executed
+        prevExcTime = nan % last time the controller was executed
         
         prevDerError = nan % use to correct jumps in derivative
 
@@ -23,11 +23,11 @@ classdef PIDController < handle
         end
         
         function u = control(obj, err, t)
-            if (t >= (6000 * 0.005) && obj.Kp == -400)
-                t / 0.005;
-                t;
+            
+            if isnan(obj.prevExcTime)
+                obj.prevExcTime = -0.005; % SHOULD NOT BE HARDCODED
             end
-            % Only update at t >= nextSampleT
+            
             dt = t - obj.prevExcTime;
             obj.prevExcTime = t;
 
@@ -40,7 +40,7 @@ classdef PIDController < handle
             if isnan(obj.prevError)
                 obj.prevError = error;
             end
-            derError = (error - obj.prevError) * 200; %NB HARD CODED 200
+            derError = (error - obj.prevError) / dt;
   
             % logs
             obj.state_log = [obj.state_log; error, derError];

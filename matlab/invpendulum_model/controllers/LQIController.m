@@ -4,8 +4,7 @@ classdef LQIController < DiscreteTimeController
         Kstate        % state gain matrix
         itg1 Integrator
         itg2 Integrator
-        prev_y = nan   % previous state (used for packet loss correction)
-        sigma = .9999;
+        prev_y
     end
     
     methods
@@ -32,7 +31,7 @@ classdef LQIController < DiscreteTimeController
             r = y_ref(1);
             err = y(1) - r;
             u = - obj.itg1.getValue() - obj.Kstate * (y);
-            
+
             obj.itg1.integrateDiscrete(err);
             obj.itg2.integrateDiscrete(obj.itg1.val);   
 
