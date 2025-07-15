@@ -24,9 +24,10 @@ function simdata = solve_invpen(initial_x, controller, max_time)
     %% Simulate
     % Solve
     simTs = 0.001;
-    x0_real = x0 + [0; 0; pi; 0]; % brings theta in the simulation frame (0 is downards, pi is upwards)
+    %x0_real = x0 + [0; 0; pi; 0]; % brings theta in the simulation frame (0 is downards, pi is upwards)
+    x0_real = x0;
     [t_sim, X_sim] = rk4_fixed_step(@(t, x) invpendulum(t, x, params), tspan, x0_real, simTs);
-    X_sim(:, 3) = X_sim(:, 3) - pi; % sets zero angle to be upwards
+    %X_sim(:, 3) = X_sim(:, 3) - pi; % sets zero angle to be upwards
     
     % Extract input 
     [t, U] = controller.getInputPlot();

@@ -3,8 +3,8 @@ clear
 clc
 format short
 
-CUSTOM_NAME = "readings_final/asd.mat";
-SIM_NOTES = "final";
+CUSTOM_NAME = "readings_final/test.mat";
+SIM_NOTES = "new_fisica";
 
 %% Create controller
 Ts = 0.005;            % controller loop time (200 Hz)
@@ -21,7 +21,8 @@ ctrl_pid = MultiPIDController(ctrl1, ctrl2, Ts, -Usat, Usat);
 % --------------- SF
 K = [-74.66163, -65.4395, 247.9755, 43.78731];
 K = [-16756.6426, -6084.35995, 10885.565, 1678.14523];
-K = [0,0,0,0];
+K = [-2462.4194, -997.80662, 2118.703, 302.65539];
+%K = [0,0,0,0];
 %K = [-12688.634, 22078.6897, 3450.06451, 528.551888];
 %K = [-2448.7728, -1010.5814, 2070.126, 296.5453];
 %K = [-351.0722, -106.2279, 234.4758, 3640.24725];
@@ -46,8 +47,8 @@ ctrl.state_loss_prob = .0;
 ctrl.input_loss_prob = 0;
 
 % ================ Generate smooth square wave reference signal of amplitude 1
-T = 5; % period
-k = 5; % the lower the smoother
+T = 10; % period
+k = 2; % the lower the smoother
 A = .2; % amplitude
 smooth_wave = @(t) A * tanh(k * sin(2*pi*(t-T/4)/T)) + A;
 
@@ -55,7 +56,7 @@ smooth_wave = @(t) A * tanh(k * sin(2*pi*(t-T/4)/T)) + A;
 % Generates reference signal by combining square waves
 poly_f = @(f, t) f(t) + f(t * 2.15) * 0.4 + 0.1 *f(t * 5) + f(t * 0.5); 
 %poly_f = @(f, t) f(t) - 0.4 * f(t*2.15) + 0.8 * f(t * 0.3) - f(t*1.5);
-poly_f = @(f, t) f(t);
+%poly_f = @(f, t) f(t)*0;
 %poly_f = @(f, t) 0;
 
 ctrl.RefFunc = @(t) [
@@ -76,8 +77,8 @@ der_smooth_ramp = @(t) (m*m*m* (t.*t) + 2 * m*m*b*t) ./ power(m*t + b, 2);
 
 %% Simulate
 % Initial conditions: [x0; xdot0; theta0; thetadot0]
-x0 = [1, -2, 0, 1]';
-t_max = 15;
+x0 = [0,0,0,0.2]';
+t_max = 20;
 
 recdata = solve_invpen(x0, ctrl, t_max);
 recdata.info.notes = SIM_NOTES;  % add description to simulation

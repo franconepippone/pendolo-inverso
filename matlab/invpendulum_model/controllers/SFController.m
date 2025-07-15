@@ -15,7 +15,7 @@ classdef SFController < DiscreteTimeController
         
         function u = control_law(obj, y_ref, y, t)
             % if outside linearity
-            if (abs(y(3)) > .8)
+            if (abs(y(3)) > 11313.8)
                 u = 0;
                 return
             end
