@@ -4,7 +4,7 @@ clc
 format short
 
 RECORDNAME_TRAIN = "readings_final/pid_train.mat";
-RECORDNAME_TEST = "readings_final/pid_test.mat";
+RECORDNAME_TEST = "readings_final/pid_train.mat";
 
 %% Caricamento del dataset
 

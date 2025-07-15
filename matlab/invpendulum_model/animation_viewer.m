@@ -4,6 +4,7 @@ function animation_viewer(recdata)
     theta = recdata.states(:, 3);
     t = recdata.t;
     x = recdata.states(:, 1);
+    TIMESTEP = recdata.info.controller_ts;
     
     %% SET UP FIGURE ------------------------------------------------
     fig = figure('Color','w');
@@ -70,7 +71,16 @@ function animation_viewer(recdata)
             % Draw and pause
             %drawnow;
             % Optionally slow down to real time:
-            pause( t( min(k+1,end) ) - t(k) );
+            pause(TIMESTEP);
+            
+            % Update counter display
+            counterText = sprintf('T: %d', k*TIMESTEP);
+            if ~isfield(ax.UserData, 'hCounter')
+                ax.UserData.hCounter = text(0.5, params.l + 0.1, counterText, ...
+                    'FontSize', 12, 'Color', 'k', 'HorizontalAlignment', 'center');
+            else
+                set(ax.UserData.hCounter, 'String', counterText);
+            end
         end
     end
 

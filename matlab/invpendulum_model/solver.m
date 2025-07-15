@@ -37,15 +37,13 @@ ctrl_imd = LQIController(Kx, Ki, 0, Ts, -Usat, Usat);
 
 
 % chooses controller
-ctrl_ideal = ctrl_pid;
+ctrl_ideal = ctrl_sf;
 
 % Turns it into a realistic controller (adds noise, packet loss...)
 ctrl = RealisticController(ctrl_ideal);
 ctrl.noise_std = .000 * [1 1 1 1];
 ctrl.state_loss_prob = .0;
 ctrl.input_loss_prob = 0;
-
-ctrl = ctrl_imd;
 
 % ================ Generate smooth square wave reference signal of amplitude 1
 T = 5; % period
@@ -78,7 +76,7 @@ der_smooth_ramp = @(t) (m*m*m* (t.*t) + 2 * m*m*b*t) ./ power(m*t + b, 2);
 
 %% Simulate
 % Initial conditions: [x0; xdot0; theta0; thetadot0]
-x0 = [0, .2, .1, -.1]';
+x0 = [1, -2, 0, 1]';
 t_max = 15;
 
 recdata = solve_invpen(x0, ctrl, t_max);
@@ -144,4 +142,4 @@ poly_f
 
 
 %% Play animation
-%animation_viewer(recdata)
+animation_viewer(recdata)
