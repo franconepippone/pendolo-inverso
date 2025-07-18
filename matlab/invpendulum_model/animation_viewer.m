@@ -16,14 +16,14 @@ function animation_viewer(recdata)
     ylabel('y (m)');
     %xlim([min(x)-params.l-0.5, max(x)+params.l+0.5]);
     xlim([-1, 1])
-    ylim([-params.l-0.2, params.l+0.2]);
+    ylim([-.2, 2*params.l+0.1]);
     
     % Draw ground line
     plot([-10000, 100000], [0 0], 'k', 'LineWidth', 1);
     
     % Initial cart rectangle
-    cartW = 0.1;  % cart half‐width
-    cartH = 0.05;  % cart half‐height
+    cartW = 0.15;  % cart half‐width
+    cartH = 0.06;  % cart half‐height
     cartY = -cartH;  % so top of cart is at y=0
     cartX = x(1) + [-cartW, +cartW, +cartW, -cartW, -cartW];
     cartYv= cartY + [0, 0, cartH*2, cartH*2, 0];
@@ -58,8 +58,8 @@ function animation_viewer(recdata)
             set(hCart, 'XData', cartX);
             
             % Update pendulum
-            xp = xc - params.l*sin(th);
-            yp =        + params.l*cos(th);
+            xp = xc - 2 * params.l*sin(th);
+            yp =        + 2 * params.l*cos(th);
             set(hPend, 'XData', [xc, xp], 'YData', [0, yp]);
 
             disp_offset = xsize * floor((xc + 1)/xsize);

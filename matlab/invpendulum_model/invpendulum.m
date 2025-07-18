@@ -15,6 +15,7 @@ function dy = invpendulum(t, y, params)
 
     % Control and Cart Friction
     % controller generates input force from state
+    %%% IN THE OLD VERSION THETA WAS theta-pi, NOT JUST theta
     F      = params.controller.step([x; x_dot; theta; th_dot], t);
     Ffric  = -b * x_dot;      
     
@@ -29,6 +30,9 @@ function dy = invpendulum(t, y, params)
     D    = (M + m)*J - (m*l*cosT)^2;
     
     % Equations of Motion
+
+    % THE LINES BELOW ARE DEPRECATED, WAS USED IN THE LAST VERSION OF THE
+    % ENGINE (theta = 0 upside down, now theta = 0 upright)
     % Cart acceleration:
     %  ddx = [ J*(F + Ffric + m l sinθ tḣ²) + m l cosθ * (m g l sinθ + pivot friction torque) ] / D
     % ddx = ( ...
@@ -42,6 +46,9 @@ function dy = invpendulum(t, y, params)
     ) / D;
     
     % Pendulum angular acceleration:
+
+    % THE LINES BELOW ARE DEPRECATED, WAS USED IN THE LAST VERSION OF THE
+    % ENGINE (theta = 0 upside down, now theta = 0 upright)
     %  ddth = [ -(M+m)*(m g l sinθ + Tpiv) - m l cosθ*(F + Ffric + m l sinθ tḣ²) ] / D
     % ddth = ( ...
     %   -(M + m)*(m*g*l*sinT + Tpiv) ...

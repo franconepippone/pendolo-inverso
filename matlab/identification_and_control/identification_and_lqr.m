@@ -3,7 +3,7 @@ clear
 clc
 format short
 
-RECORDNAME_TRAIN = "readings_final/test.mat";
+RECORDNAME_TRAIN = "readings_final/pid_train.mat";
 RECORDNAME_TEST = "readings_final/pid_test.mat";
 
 %% Caricamento del dataset
@@ -33,7 +33,7 @@ R = ctrb(A, B);
 rank(R);
 
 Q = diag([1000 0 100 0]);    % State cost matrix
-R = .0001;              % Control cost matrix
+R = .01;              % Control cost matrix
 
 % Compute the optimal gain K using discrete LQR
 [K, P, E] = dlqr(A, B, Q, R);

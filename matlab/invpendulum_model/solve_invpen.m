@@ -24,9 +24,11 @@ function simdata = solve_invpen(initial_x, controller, max_time)
     %% Simulate
     % Solve
     simTs = 0.001;
-    %x0_real = x0 + [0; 0; pi; 0]; % brings theta in the simulation frame (0 is downards, pi is upwards)
+    % THE LINE BELOW IS DEPRECATED, WAS USED IN THE LAST VERSION OF THE ENGINE
+    %x0_real = x0 + [0; 0; pi; 0]; % brings theta in the simulation frame (0 downards, pi is upwards)
     x0_real = x0;
     [t_sim, X_sim] = rk4_fixed_step(@(t, x) invpendulum(t, x, params), tspan, x0_real, simTs);
+    % THE LINE BELOW IS DEPRECATED, WAS USED IN THE LAST VERSION OF THE ENGINE
     %X_sim(:, 3) = X_sim(:, 3) - pi; % sets zero angle to be upwards
     
     % Extract input 

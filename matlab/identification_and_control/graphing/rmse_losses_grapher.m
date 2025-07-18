@@ -64,7 +64,7 @@ end
 
 
 %% train loop
-packet_loss_probs = 0:0.01:1; % Create an array of packet loss probabilities from 0 to 1
+packet_loss_probs = 0:0.02:1; % Create an array of packet loss probabilities from 0 to 1
 rmse_values = zeros(size(packet_loss_probs)); % Preallocate array for RMSE values
 num_samples = 100; % Number of samples to average for each packet loss probability
 rmse_values_multi = zeros(length(packet_loss_probs), num_samples); % Preallocate array for multiple RMSE values
@@ -77,11 +77,46 @@ parfor idx = 1:length(packet_loss_probs)
 end
 
 %% plot
-mean_rmse_values = mean(rmse_values_multi, 2); % Calculate the mean RMSE for each packet loss probability
-figure; % Create a new figure
-plot(packet_loss_probs, mean_rmse_values, '-', 'LineWidth', 1.5); % Plot mean RMSE values against packet loss probabilities
-xlabel('Packet Loss Probability'); % Label for x-axis
-ylabel('Mean RMSE'); % Label for y-axis
-title('Mean RMSE vs Packet Loss Probability'); % Title of the plot
-grid on; % Enable grid
-hold on;
+% — your original data —
+% points: 40×100   (40 original p_loss levels × 100 samples each)
+% p_loss_vals: 1×40   (the true packet‐loss rates, not equally spaced)
+
+% 1) choose how many new x‑positions you want:
+K = 80;   % e.g. 80 evenly spaced levels
+
+% 2) build the new, evenly spaced vector between min and max of your original:
+p_vals = linspace( min(p_loss_vals), max(p_loss_vals), K );  % 1×K
+
+% 3) interpolate your 40×100 matrix along the "loss" dimension
+%    interp1 will give you a K×100 matrix `points_new`:
+points_new = interp1( ...
+    p_loss_vals, ...     % x locations of your existing rows
+    points,    ...       % the 40×100 data matrix
+    p_vals,    ...       % new x locations (1×K)
+    'linear'...        % interpolation metho         % extrapolate outside [min,max] if needed
+);  
+
+
+% 3) Draw the boxes *only* at those real x‑positions:
+figure;
+h = boxplot(X_sorted', ...
+           'positions', pos_sorted, ...
+           'Widths',    0.5, ...    % try thinner boxes if they overlap
+           'Labels',    {});        % turn off the default 1–40 labels
+set(h, 'LineWidth', 1.2)
+
+% 4) Pick a sparse subset of ticks so they don't overlap:
+step = 1;   % every 5th box
+sel  = 1:step:numel(pos_sorted);
+
+%xticks( pos_sorted(sel) )
+%xticklabels( arrayfun(@(x) sprintf('%.1f%%', x), pos_sorted(sel), 'uni',0) )
+%xtickangle(45)
+
+xlabel('Packet‑loss probability (%)')
+ylabel('Tracking cost')
+title('Tracking cost vs Packet‑Loss Rate')
+grid on
+
+% 5) (Optional) Tweak the limits so the outer boxes aren't cut off:
+%xlim( [ min(pos_sorted) - step/2,  max(pos_sorted) + step/2 ] )

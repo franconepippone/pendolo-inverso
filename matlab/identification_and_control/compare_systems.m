@@ -10,6 +10,7 @@
 
 Ts = TIMESTEP;                  % controller loop time
 x0 = [ .2;    -.2;   .1;   -.2];  % initial cond [x, x_dot, theta, theta_dot]
+x0 = [ .5;    -.5;   .1;   2.9];
 t_max = 5;                      % simulation timespan
 
 %% Simulation of the LINEAR A, B system
@@ -24,6 +25,7 @@ recdata.reference = zeros(size(tOut));
 recdata.info.title = "Linear A, B system";
 
 plot_data
+ylim([-100, 20]);
 recdata_lin = recdata; % backup of this data
 
 %% Simulation of the real system
@@ -38,6 +40,7 @@ recdata = solve_invpen(x0, ctrl, t_max);
 recdata.info.title = "Non-linear system";
 
 plot_data
+ylim([-100, 20]);
 recdata_real = recdata; % backup of this data
 
 %% Plotting state difference (error) between the two systems
