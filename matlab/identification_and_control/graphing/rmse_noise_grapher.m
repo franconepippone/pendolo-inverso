@@ -90,21 +90,55 @@ poly_f = @(f, t) f(t) + f(t * 2.15) * 0.4 + 0.1 *f(t * 5) + f(t * 0.5);
 std_vals = 0:.0001:.003;
 points = get_points(std_vals, 15, poly_f);
 
-mean_values = mean(points, 2);
 
 %% plot
 figure;
 hold on; % Hold on to plot multiple points
 for row = 1:size(points, 1)
-    p = plot(std_vals(row) * ones(size(points, 2), 1)', points(row, :), 'x', 'Color','r', 'LineWidth',1); % Plot each column
+    p = plot(std_vals(row) * ones(size(points, 2), 1)', points(row, :), 'x', 'Color','r', 'LineWidth',1, 'MarkerSize', 10); % Plot each column
+
 end
-h = plot(std_vals, mean_values,'-',  'Color', [1 0.5 0], 'LineWidth', 2);
+
+mean_values = mean(points, 2);
+h = plot(std_vals, mean_values,'-',  'Color', [1 0.5 0], 'LineWidth', 4);
 
 
 % Automatically place the legend at the best location
-legend([p, h], {'Individual simulations', 'Mean trend'}, 'Location', 'best');
+legend([p, h], {'Individual simulations', 'Mean trend'}, 'Location', 'best', 'FontSize', 12);
 hold off; % Release the hold
 xlabel('Standard Deviation Values (σ)');
 ylabel('RMSE on train dataset');
 title('RMSE of Linear Regression vs noise std Plot');
 grid on; % Add grid for better visualizationzxc
+
+
+%% BOXPLOT
+
+% Create boxchart
+figure;
+b = boxchart(std_vals, points');
+
+filtered_vals = std_vals;
+mean_values = median(points, 2);
+hold on;
+plot(filtered_vals, mean_values, '.-', 'LineWidth',1, 'Color', [1.0, 0.5, 0.4]);
+
+
+
+% Style settings
+b.BoxWidth = 0.8;                   % wider boxes (default is 0.5)
+b.BoxFaceColor = [0 0.447 0.741];   % MATLAB default blue
+b.LineWidth = 1;                  % thicker edges
+
+% Axes and labels
+xlabel('Packet loss probability (%)');
+ylabel('Tracking cost');
+title('Tracking Cost vs Packet Loss Probability');
+xlim([-1, 60]);
+ylim([298.2, 299]);
+% Grid and box
+ygrid on;
+box on;
+
+% Optionally, reduce number of x-ticks if crowded
+xticks(unique(round(100 * p_loss_vals, 4)));  % use only unique x values
