@@ -1,0 +1,20 @@
+tesi todo
+
+Raccogli dati per identificazione con vari segnali di riferimento (prova con stimoli sinusoidali o sweep in frequenza, per migliorare la riproducibiltà)
+
+prova sovrapponendo allo stato rumore gaussiano con 3 livelli: no rumore, poco, massimo
+
+Identificazione con regressione lineare e plot dei risultati (grafico delle variabili di stato / errore, per tutti e 3 i livelli di rumore)
+affianco il RSME
+
+trova matrice K con LQR
+
+definire un parametro di fitness (integrale dell'angolo del pendolo + integrale della posizione)
+
+grafici della risposta del sistema stimata sul sistema linearizzato e su quello non lineare (per evidenziare le differenze)
++ relativo fitness (normalizzare il fitness della generica simulazione sul fitness del sistema linearizzato?)
+
+Introduzione di perdite di pacchetti Bernoulli nel canale di comunicazione controller -> attuatore
+varie percentuali fino all'instabilità.
+
+Implementazione della policy per il decadimento graduale dell'errore.

@@ -10,3 +10,4 @@
 
 # all recordings with default name
 **/simrecord*.mat
+/tesi/private
